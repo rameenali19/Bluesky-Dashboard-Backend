@@ -24,6 +24,6 @@ for await (const evt of jetstream.live({
 }
 
 console.log("Stream finished and total events are :", count);
-console.log("The total likes are: " ,collections['app.bsky.feed.post']);
-console.log("The total likes are: " ,collections['app.bsky.feed.like']);
-console.log("The total likes are: " ,collections['app.bsky.feed.repost']);
+console.log("The total Posts are: " ,collections['app.bsky.feed.post']);
+console.log("The total Likes area: " ,collections['app.bsky.feed.like']);
+console.log("The total Reposts are: " ,collections['app.bsky.feed.repost']);

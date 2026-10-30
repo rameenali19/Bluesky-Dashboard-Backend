@@ -2,7 +2,7 @@
   "name": "backend",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/ingestionStream.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },

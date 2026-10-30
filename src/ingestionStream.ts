@@ -1,13 +1,19 @@
 // npm install @bsky/jetstream
-import { Jetstream } from '@bsky/jetstream'
+import { Jetstream, type CursorStore} from '@bsky/jetstream'
 
 const jetstream = new Jetstream('https://jetstream.us-east.bsky.network')
 let count=0;
+let sequence:number|undefined;  
 const collections={
   post:0,
   like:0,
   repost:0
 };
+
+const cursor: CursorStore = {
+  load: async () => sequence,   // number | undefined
+  save: async (seq) => {sequence=seq},
+}
 
  setInterval(()=>{
 console.log("Total events are :", count);
@@ -19,9 +25,10 @@ console.log("The total Reposts are: " ,collections.repost);
 
 for await (const evt of jetstream.live({
    collections: ['app.bsky.feed.post','app.bsky.feed.like','app.bsky.feed.repost'],
-   kinds: ['commit'] 
+   kinds: ['commit'] , cursor
   })) {
-  if (evt.kind !== 'commit') continue
+  if (evt.kind !== 'commit') continue;
+  sequence=evt.seq;
 
    let type:'post'|'repost'|'like';
    if(evt.commit.collection==='app.bsky.feed.like') type = 'like';

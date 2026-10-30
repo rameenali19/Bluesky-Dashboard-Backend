@@ -3,17 +3,17 @@ import { Jetstream } from '@bsky/jetstream'
 
 const jetstream = new Jetstream('https://jetstream.us-east.bsky.network')
 let count=0;
-const collections: Record<string,number>={
-  'app.bsky.feed.post':0,
-  'app.bsky.feed.like':0,
-  'app.bsky.feed.repost':0
+const collections={
+  post:0,
+  like:0,
+  repost:0
 };
 
  setInterval(()=>{
-console.log("Stream finished and total events are :", count);
-console.log("The total Posts are: " ,collections['app.bsky.feed.post']);
-console.log("The total Likes area: " ,collections['app.bsky.feed.like']);
-console.log("The total Reposts are: " ,collections['app.bsky.feed.repost']);
+console.log("Total events are :", count);
+console.log("The total Posts are: " ,collections.post);
+console.log("The total Likes area: " ,collections.like);
+console.log("The total Reposts are: " ,collections.repost);
   },5000)
   
 
@@ -23,7 +23,11 @@ for await (const evt of jetstream.live({
   })) {
   if (evt.kind !== 'commit') continue
 
-   const type = evt.commit.collection ;
+   let type:'post'|'repost'|'like';
+   if(evt.commit.collection==='app.bsky.feed.like') type = 'like';
+   else if (evt.commit.collection==='app.bsky.feed.post') type= 'post';
+   else type='repost';
+
    if(type) collections[type]++;
     count++;
 

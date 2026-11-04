@@ -10,7 +10,6 @@
     "@bsky/jetstream": "^1.0.0",
     "@hono/node-server": "^2.1.3",
     "hono": "^4.13.13",
-    "knex": "^3.3.0",
     "pg": "^8.23.1"
   },
   "devDependencies": {

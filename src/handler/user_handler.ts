@@ -6,18 +6,17 @@ async function userHandler(evt: any) {
     const did = evt.did;
 
     const result = await pool.query(`
-      INSERT INTO users (
-        account_id
-      )
+      INSERT INTO users (account_id)
         VALUES ($1)
-        RETURNING *
-      `, [did]);
+        ON CONFLICT (account_id) DO NOTHING
+        RETURNING *`,
+         [did]);
 
-      return result.rows[0];
-  } 
-  catch(error){
+    return result.rows[0];
+  }
+  catch (error) {
     console.error('Could not handle user:', error);
-        throw error;
+    throw error;
   }
 };
 

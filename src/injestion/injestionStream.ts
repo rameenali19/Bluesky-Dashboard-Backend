@@ -1,6 +1,7 @@
 import { Jetstream, type CursorStore } from '@bsky/jetstream'
 import userHandler from '../handler/user_handler.js';
 import postsHandler from '../handler/posts_handler.js';
+import likesHandler from '../handler/likes_handler.js';
 
 async function ingestionStream() {
 

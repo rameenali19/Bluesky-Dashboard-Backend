@@ -1,0 +1,211 @@
+export const up = (pgm)=>{
+
+  //users table
+  pgm.createTable ('users',{
+    id:{
+      type:'bigint',
+      primaryKey:true,
+      generated:'ALWAYS',
+       identity: true
+    },
+    account_id:{
+      type:'text',
+      notNull:true,
+      unique:true
+    }
+  })
+
+    //posts table
+    pgm.createTable('posts',{
+      post_uri:{
+        type:'text',
+        primaryKey:true,
+        notNull:true
+      },
+      user_id:{
+        type:'bigint',
+        notNull:true,
+        references:'users(id)'
+      },
+      post_text:{
+        type:'text'
+      },
+      deleted:{
+        type:'boolean',
+        notNull:true,
+        default:false
+      },
+      created_at:{
+        type:'timestamptz'
+      },
+      record_key:{
+        type:'text',
+        notNull:true
+      },
+      postgres_updated:{
+        type:'timestamptz',
+        notNull:true,
+        default:pgm.func('now()')
+      },
+       mongodb_synced_at:{
+         type:'timestamptz'
+       }
+    });
+    pgm.addConstraint('posts','unique_posts',{
+      unique:['user_id','record_key']
+    });
+
+    //likes table
+    pgm.createTable('likes',{
+       id:{
+      type:'bigint',
+      primaryKey:true,
+      generated:'ALWAYS',
+       identity: true
+    },
+     user_id:{
+        type:'bigint',
+        notNull:true,
+        references:'users(id)'
+      },
+      target_post_uri:{
+        type:'text',
+        notNull:true,
+        references:'posts(post_uri)'
+      },
+       record_key:{
+        type:'text',
+        notNull:true
+      },
+       created_at:{
+        type:'timestamptz'
+      },
+       deleted:{
+        type:'boolean',
+        notNull:true,
+        default:false
+      },
+       postgres_updated:{
+        type:'timestamptz',
+        notNull:true,
+        default:pgm.func('now()')
+      },
+       mongodb_synced_at:{
+         type:'timestamptz'
+       }
+    });
+     pgm.addConstraint('likes','unique_likes',{
+      unique:['user_id','record_key']
+    });
+
+    //reposts table 
+    pgm.createTable('reposts',{    
+      id:{
+      type:'bigint',
+      primaryKey:true,
+      generated:'ALWAYS',
+       identity: true
+    },
+     user_id:{
+        type:'bigint',
+        notNull:true,
+        references:'users(id)'
+      },
+      target_post_uri:{
+        type:'text',
+        notNull:true,
+        references:'posts(post_uri)'
+      },
+       record_key:{
+        type:'text',
+        notNull:true
+      },
+       created_at:{
+        type:'timestamptz'
+      },
+       deleted:{
+        type:'boolean',
+        notNull:true,
+        default:false
+      },
+       postgres_updated:{
+        type:'timestamptz',
+        notNull:true,
+        default:pgm.func('now()')
+      },
+       mongodb_synced_at:{
+         type:'timestamptz'
+       }
+    });
+     pgm.addConstraint('reposts','unique_reposts',{
+      unique:['user_id','record_key']
+    });
+
+    //sync_state table
+    pgm.createTable('sync_state',{
+      id:{
+        type:'integer',
+        primaryKey:true,
+        default:1
+      },
+      last_cursor:{
+        type:'bigint',
+        notNull:true
+      },
+      postgres_updated:{
+        type:'timestamptz',
+        notNull:true,
+        default:pgm.func('now()')
+      }
+    });
+
+    //jetstream_events table
+    pgm.createTable('jetstream_events',{
+       id:{
+      type:'bigint',
+      primaryKey:true,
+      generated:'ALWAYS',
+       identity: true
+    },
+     user_id:{
+        type:'bigint',
+        notNull:true,
+        references:'users(id)'
+      },
+      cursor:{
+        type:'bigint',
+         notNull:true,
+         unique:true
+      },
+      event_time:{
+        type:'timestamptz',
+        notNull:true
+      },
+      event_type:{
+        type:'text',
+         notNull:true
+      },
+      collection_name:{
+        type:'text'
+      },
+      operation:{
+        type:'text'
+      },
+      record_key:{
+        type:'text'
+      },
+      event_data:{
+        type:'jsonb',
+        notNull:true
+      }
+    })
+}
+
+export const down = (pgm)=>{
+  pgm.dropTable('jetstream_events');
+  pgm.dropTable('sync_state');
+  pgm.dropTable('reposts');
+  pgm.dropTable('likes');
+  pgm.dropTable('posts');
+  pgm.dropTable('users');
+}

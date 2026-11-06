@@ -18,10 +18,10 @@ async function ingestionStream() {
   })) {
     if (evt.kind !== 'commit') continue;
 
-   const res = await userHandler(evt);
+   const result = await userHandler(evt);
 
     if (evt.commit.collection==='app.bsky.feed.post'){
-    const res = await postsHandler(evt);
+    const res = await postsHandler(evt,result);
     }
 
     sequence = evt.seq;

@@ -1,211 +1,79 @@
 export const up = (pgm)=>{
 
-  //users table
-  pgm.createTable ('users',{
-    id:{
-      type:'bigint',
-      primaryKey:true,
-      generated:'ALWAYS',
-       identity: true
-    },
-    account_id:{
-      type:'text',
-      notNull:true,
-      unique:true
-    }
-  })
+  pgm.sql(`
+  CREATE TABLE users(
+      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      account_id TEXT NOT NULL UNIQUE
+      );
 
-    //posts table
-    pgm.createTable('posts',{
-      post_uri:{
-        type:'text',
-        primaryKey:true,
-        notNull:true
-      },
-      user_id:{
-        type:'bigint',
-        notNull:true,
-        references:'users(id)'
-      },
-      post_text:{
-        type:'text'
-      },
-      deleted:{
-        type:'boolean',
-        notNull:true,
-        default:false
-      },
-      created_at:{
-        type:'timestamptz'
-      },
-      record_key:{
-        type:'text',
-        notNull:true
-      },
-      postgres_updated:{
-        type:'timestamptz',
-        notNull:true,
-        default:pgm.func('now()')
-      },
-       mongodb_synced_at:{
-         type:'timestamptz'
-       }
-    });
-    pgm.addConstraint('posts','unique_posts',{
-      unique:['user_id','record_key']
-    });
+  CREATE TABLE posts(
+    post_uri TEXT PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    post_text TEXT,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ,
+    record_key TEXT NOT NULL,
+    postgres_updated TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    mongodb_synced_at TIMESTAMPTZ,
 
-    //likes table
-    pgm.createTable('likes',{
-       id:{
-      type:'bigint',
-      primaryKey:true,
-      generated:'ALWAYS',
-       identity: true
-    },
-     user_id:{
-        type:'bigint',
-        notNull:true,
-        references:'users(id)'
-      },
-      target_post_uri:{
-        type:'text',
-        notNull:true,
-        references:'posts(post_uri)'
-      },
-       record_key:{
-        type:'text',
-        notNull:true
-      },
-       created_at:{
-        type:'timestamptz'
-      },
-       deleted:{
-        type:'boolean',
-        notNull:true,
-        default:false
-      },
-       postgres_updated:{
-        type:'timestamptz',
-        notNull:true,
-        default:pgm.func('now()')
-      },
-       mongodb_synced_at:{
-         type:'timestamptz'
-       }
-    });
-     pgm.addConstraint('likes','unique_likes',{
-      unique:['user_id','record_key']
-    });
+    CONSTRAINT unique_post
+    UNIQUE(user_id, record_key)
+  );
 
-    //reposts table 
-    pgm.createTable('reposts',{    
-      id:{
-      type:'bigint',
-      primaryKey:true,
-      generated:'ALWAYS',
-       identity: true
-    },
-     user_id:{
-        type:'bigint',
-        notNull:true,
-        references:'users(id)'
-      },
-      target_post_uri:{
-        type:'text',
-        notNull:true,
-        references:'posts(post_uri)'
-      },
-       record_key:{
-        type:'text',
-        notNull:true
-      },
-       created_at:{
-        type:'timestamptz'
-      },
-       deleted:{
-        type:'boolean',
-        notNull:true,
-        default:false
-      },
-       postgres_updated:{
-        type:'timestamptz',
-        notNull:true,
-        default:pgm.func('now()')
-      },
-       mongodb_synced_at:{
-         type:'timestamptz'
-       }
-    });
-     pgm.addConstraint('reposts','unique_reposts',{
-      unique:['user_id','record_key']
-    });
+  CREATE TABLE likes(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    target_post_uri TEXT NOT NULL REFERENCES posts(post_uri),
+    record_key TEXT NOT NULL,
+    created_at TIMESTAMPTZ,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    postgres_updated TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    mongodb_synced_at TIMESTAMPTZ,
 
-    //sync_state table
-    pgm.createTable('sync_state',{
-      id:{
-        type:'integer',
-        primaryKey:true,
-        default:1
-      },
-      last_cursor:{
-        type:'bigint',
-        notNull:true
-      },
-      postgres_updated:{
-        type:'timestamptz',
-        notNull:true,
-        default:pgm.func('now()')
-      }
-    });
+    CONSTRAINT unique_like
+    UNIQUE(user_id, record_key)
+  );
 
-    //jetstream_events table
-    pgm.createTable('jetstream_events',{
-       id:{
-      type:'bigint',
-      primaryKey:true,
-      generated:'ALWAYS',
-       identity: true
-    },
-     user_id:{
-        type:'bigint',
-        notNull:true,
-        references:'users(id)'
-      },
-      cursor:{
-        type:'bigint',
-         notNull:true,
-         unique:true
-      },
-      event_time:{
-        type:'timestamptz',
-        notNull:true
-      },
-      event_type:{
-        type:'text',
-         notNull:true
-      },
-      collection_name:{
-        type:'text'
-      },
-      operation:{
-        type:'text'
-      },
-      record_key:{
-        type:'text'
-      },
-      event_data:{
-        type:'jsonb',
-        notNull:true
-      }
-    })
-}
+  CREATE TABLE reposts(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id),
+    target_post_uri TEXT NOT NULL REFERENCES posts(post_uri),
+    record_key TEXT NOT NULL,
+    created_at TIMESTAMPTZ,
+    deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    postgres_updated TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    mongodb_synced_at TIMESTAMPTZ,
+
+    CONSTRAINT unique_repost
+    UNIQUE(user_id, record_key)
+  );
+
+  CREATE TABLE sync_state(
+    id INTEGER PRIMARY KEY DEFAULT 1 CHECK(id=1),
+    last_cursor BIGINT NOT NULL,
+    postgres_updated TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+
+  CREATE TABLE jetstream_events(
+     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     user_id BIGINT NOT NULL REFERENCES users(id),
+     cursor BIGINT NOT NULL UNIQUE,
+     event_time TIMESTAMPTZ NOT NULL,
+     event_type TEXT NOT NULL,
+     collection_name TEXT,
+     operation TEXT,
+     record_key TEXT,
+     event_data JSONB NOT NULL 
+  );
+     `)
+};
 
 export const down = (pgm)=>{
-  pgm.dropTable('jetstream_events');
-  pgm.dropTable('sync_state');
-  pgm.dropTable('reposts');
-  pgm.dropTable('likes');
-  pgm.dropTable('posts');
-  pgm.dropTable('users');
-}
+  pgm.sql(`
+    DROP TABLE jetstream_events;
+    DROP TABLE sync_state;
+    DROP TABLE reposts;
+    DROP TABLE likes;
+    DROP TABLE posts;
+    DROP TABLE users;
+`)};

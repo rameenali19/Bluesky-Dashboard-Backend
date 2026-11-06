@@ -17,9 +17,9 @@ async function ingestionStream() {
     kinds: ['commit'], cursor
   })) {
     if (evt.kind !== 'commit') continue;
-    sequence = evt.seq;
 
     await userHandler(evt);
+    sequence = evt.seq;
 
   }
 }

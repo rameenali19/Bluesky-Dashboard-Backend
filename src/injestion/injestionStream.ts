@@ -17,12 +17,17 @@ async function ingestionStream() {
     collections: ['app.bsky.feed.post', 'app.bsky.feed.like', 'app.bsky.feed.repost'],
     kinds: ['commit'], cursor
   })) {
+    
     if (evt.kind !== 'commit') continue;
 
    const result = await userHandler(evt);
 
     if (evt.commit.collection==='app.bsky.feed.post'){
     const res = await postsHandler(evt,result);
+    }
+
+    if (evt.commit.collection==='app.bsky.feed.like'){
+    const res = await likesHandler(evt,result);
     }
 
     sequence = evt.seq;

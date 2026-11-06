@@ -4,9 +4,9 @@ async function postsHandler(evt: any,user_id: number) {
 
   try {
 
-     if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {
-
   const post_uri=`at://${evt.did}/app.bsky.feed.post/${evt.commit.rkey}`;
+
+     if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {
   const post_text = evt.commit.record.text;
   const record_key = evt.commit.rkey;
   const created_at = evt.time;
@@ -28,8 +28,13 @@ async function postsHandler(evt: any,user_id: number) {
 
  else if(evt.commit.operation === 'delete'){
     const result = await pool.query(`
-      
-      `)
+      UPDATE posts
+      SET deleted = TRUE,
+      postgres_updated = NOW()
+      WHERE post_uri = $1`,
+      [post_uri]);
+       
+      return result.rows[0];
   }
 
   }

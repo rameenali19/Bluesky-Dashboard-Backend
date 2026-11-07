@@ -35,6 +35,8 @@ async function ingestionStream() {
     const res = await interactionsHandler(evt,user_id,table);
     }
 
+    const cursor = await syncStateHandler(evt.seq);
+    
     sequence = evt.seq;
 
   }

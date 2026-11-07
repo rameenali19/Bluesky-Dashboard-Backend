@@ -2,10 +2,11 @@ import pool from '../config/database.js'
 
 async function likesHandler(evt: any,user_id:number) {
 
+    const record_key = evt.commit.rkey;
+
   try {
 
   const target_post_uri = evt.record.subject.uri;
-  const record_key = evt.commit.rkey;
   const created_at = new Date(evt.commit.record.createdAt);
 
     //Checking if the event is create like 
@@ -65,7 +66,14 @@ async function likesHandler(evt: any,user_id:number) {
     }
 
     else if (evt.commit.operation === 'delete') {
+      const result = await pool.query(`
+      UPDATE likes
+      SET deleted = TRUE,
+      postgres_updated = NOW()  
+      WHERE record_key = $1
+      RETURNING *`, [record_key]);
       
+      return result.rows[0];
     }
   }
 

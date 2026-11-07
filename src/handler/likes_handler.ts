@@ -13,7 +13,7 @@ async function likesHandler(evt: any, user_id: number) {
 
       //Does this post exist in posts table?
       const exist = await pool.query(`
-        SELECT id 
+        SELECT post_uri 
         FROM posts
         WHERE post_uri = $1`, [target_post_uri]);
 

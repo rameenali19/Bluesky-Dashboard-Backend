@@ -66,6 +66,7 @@ async function likesHandler(evt: any, user_id: number) {
       return result.rows[0];
     }
 
+    //Deleting the like from the database if that like already exists
     else if (evt.commit.operation === 'delete') {
       const result = await pool.query(`
       UPDATE likes

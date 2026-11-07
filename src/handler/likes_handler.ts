@@ -73,7 +73,7 @@ async function likesHandler(evt: any, user_id: number) {
       SET deleted = TRUE,
       postgres_updated = NOW()  
       WHERE record_key = $1 AND user_id = $2
-      RETURNING *`, [user_id,record_key]);
+      RETURNING *`, [record_key,user_id]);
 
       return result.rows[0];
     }

@@ -8,7 +8,7 @@ async function likesHandler(evt: any, user_id: number) {
     //Checking if the event is create like 
     if (evt.commit.operation === 'create') {
 
-      const target_post_uri = evt.record.subject.uri;
+      const target_post_uri = evt.commit.record.subject.uri;
       const created_at = new Date(evt.commit.record.createdAt);
 
       //Does this post exist in posts table?

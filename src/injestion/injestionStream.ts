@@ -15,19 +15,18 @@ async function ingestionStream() {
 
   for await (const evt of jetstream.live({
     collections: ['app.bsky.feed.post', 'app.bsky.feed.like', 'app.bsky.feed.repost'],
-    kinds: ['commit'], cursor
+    kinds: ['commit'], cursor,
   })) {
     
     if (evt.kind !== 'commit') continue;
 
-   const result = await userHandler(evt);
+   const user_id = await userHandler(evt);
 
     if (evt.commit.collection==='app.bsky.feed.post'){
-    const res = await postsHandler(evt,result);
+    const post_uri = await postsHandler(evt,user_id);
     }
-
     if (evt.commit.collection==='app.bsky.feed.like'){
-    const res = await likesHandler(evt,result);
+    const res = await likesHandler(evt,user_id);
     }
 
     sequence = evt.seq;

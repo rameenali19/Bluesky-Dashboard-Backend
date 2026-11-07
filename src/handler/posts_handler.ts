@@ -6,10 +6,10 @@ async function postsHandler(evt: any,user_id: number) {
 
   const post_uri=`at://${evt.did}/app.bsky.feed.post/${evt.commit.rkey}`;
 
-     if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {
+  if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {
   const post_text = evt.commit.record.text;
   const record_key = evt.commit.rkey;
-  const created_at = evt.time;
+  const created_at = new Date(evt.commit.record.createdAt);
 
   const result = await pool.query(`
  

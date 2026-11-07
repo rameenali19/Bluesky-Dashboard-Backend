@@ -5,7 +5,7 @@ async function interactionsHandler(evt: any, user_id: number,table:string) {
   try {
     const record_key = evt.commit.rkey;
 
-    //Checking if the event is create like 
+    //Checking if the event is create like/repost 
     if (evt.commit.operation === 'create') {
 
       const target_post_uri = evt.commit.record.subject.uri;
@@ -52,9 +52,9 @@ async function interactionsHandler(evt: any, user_id: number,table:string) {
             RETURNING *`, [target_post_uri, post_user_id, post_record_key]);
       }
 
-      //Inserting repost in repost table
+      //Inserting like/repost in likes/reposts table
       const result = await pool.query(`
-        INSERT INTO reposts (user_id, target_post_uri,record_key,created_at)
+        INSERT INTO ${table} (user_id, target_post_uri,record_key,created_at)
         VALUES ($1,$2,$3,$4)
         ON CONFLICT (user_id, record_key)
         DO UPDATE SET 
@@ -66,10 +66,10 @@ async function interactionsHandler(evt: any, user_id: number,table:string) {
       return result.rows[0];
     }
 
-    //Deleting the repost from the database if that repost already exists
+    //Deleting the like/repost from the database if that like/repost already exists
     else if (evt.commit.operation === 'delete') {
       const result = await pool.query(`
-      UPDATE reposts
+      UPDATE ${table}
       SET deleted = TRUE,
       postgres_updated = NOW()  
       WHERE record_key = $1 AND user_id = $2

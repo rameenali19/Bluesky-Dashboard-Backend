@@ -9,7 +9,10 @@ async function syncStateHandler(cursor: number) {
       VALUES ($1)
       ON CONFLICT (id)
       DO UPDATE SET 
-      last_cursor = EXCLUDED.last_cursor;`,[cursor])
+      last_cursor = EXCLUDED.last_cursor
+      RETURNING * `,[cursor])
+
+      return result.rows[0].last_cursor;
 
   }
 

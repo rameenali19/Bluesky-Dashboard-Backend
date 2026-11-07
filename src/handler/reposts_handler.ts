@@ -52,9 +52,9 @@ async function repostsHandler(evt: any, user_id: number) {
             RETURNING *`, [target_post_uri, post_user_id, post_record_key]);
       }
 
-      //Inserting like in likes table
+      //Inserting repost in repost table
       const result = await pool.query(`
-        INSERT INTO likes (user_id, target_post_uri,record_key,created_at)
+        INSERT INTO reposts (user_id, target_post_uri,record_key,created_at)
         VALUES ($1,$2,$3,$4)
         ON CONFLICT (user_id, record_key)
         DO UPDATE SET 
@@ -66,21 +66,21 @@ async function repostsHandler(evt: any, user_id: number) {
       return result.rows[0];
     }
 
-    //Deleting the like from the database if that like already exists
+    //Deleting the repost from the database if that repost already exists
     else if (evt.commit.operation === 'delete') {
       const result = await pool.query(`
-      UPDATE likes
+      UPDATE reposts
       SET deleted = TRUE,
       postgres_updated = NOW()  
       WHERE record_key = $1 AND user_id = $2
-      RETURNING *`, [record_key,user_id]);
+      RETURNING *`, [record_key, user_id]);
 
       return result.rows[0];
     }
   }
 
   catch (error) {
-    console.error('Could not handle like:', error);
+    console.error('Could not handle repost:', error);
     throw error;
   }
 };

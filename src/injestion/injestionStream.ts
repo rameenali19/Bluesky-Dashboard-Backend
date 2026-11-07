@@ -2,6 +2,7 @@ import { Jetstream, type CursorStore } from '@bsky/jetstream'
 import userHandler from '../handler/user_handler.js';
 import postsHandler from '../handler/posts_handler.js';
 import likesHandler from '../handler/likes_handler.js';
+import repostsHandler from '../handler/reposts_handler.js';
 
 async function ingestionStream() {
 
@@ -27,6 +28,9 @@ async function ingestionStream() {
     }
     if (evt.commit.collection==='app.bsky.feed.like'){
     const res = await likesHandler(evt,user_id);
+    }
+    if (evt.commit.collection==='app.bsky.feed.repost'){
+    const res = await repostsHandler(evt,user_id);
     }
 
     sequence = evt.seq;

@@ -1,6 +1,6 @@
 import pool from '../config/database.js'
 
-async function interactionsHandler(evt: any, user_id: number) {
+async function interactionsHandler(evt: any, user_id: number,table:string) {
 
   try {
     const record_key = evt.commit.rkey;

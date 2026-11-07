@@ -27,9 +27,11 @@ async function ingestionStream() {
     const post_uri = await postsHandler(evt,user_id);
     }
     if (evt.commit.collection==='app.bsky.feed.like'){
+    const table = 'likes';
     const res = await likesHandler(evt,user_id);
     }
     if (evt.commit.collection==='app.bsky.feed.repost'){
+    const table = 'reposts';
     const res = await repostsHandler(evt,user_id);
     }
 

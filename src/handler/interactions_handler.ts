@@ -1,6 +1,6 @@
 import pool from '../config/database.js'
 
-async function interactionsHandler(evt: any, user_id: number,table:string) {
+async function interactionsHandler(evt: any, user_id: number, table: string) {
 
   try {
     const record_key = evt.commit.rkey;
@@ -34,6 +34,8 @@ async function interactionsHandler(evt: any, user_id: number,table:string) {
           const adding_user = await pool.query(`
                INSERT INTO users (account_id)
                 VALUES ($1)
+                ON CONFLICT (account_id) 
+                DO UPDATE SET account_id = EXCLUDED.account_id
                 RETURNING *`, [did]);
           post_user_id = adding_user.rows[0].id;  //Store the user id
         }
@@ -80,7 +82,7 @@ async function interactionsHandler(evt: any, user_id: number,table:string) {
   }
 
   catch (error) {
-    console.error('Could not handle repost:', error);
+    console.error('Could not handle interaction:', error);
     throw error;
   }
 };

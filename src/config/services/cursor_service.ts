@@ -8,14 +8,16 @@ async function cursorService(){
       FROM sync_state 
       WHERE id = 1;
       `)
-      return result.rows[0].last_cursor;
+      
+      if(result.rows.length===0) return undefined;
+      
+     else  return result.rows[0].last_cursor;
   }
-
+  
   catch(error){
     console.error('Could not find cursor', error);
     throw error;
   }
-
 }
 
 export default cursorService;

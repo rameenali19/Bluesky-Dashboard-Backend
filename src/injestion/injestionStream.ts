@@ -3,11 +3,13 @@ import userHandler from '../handler/user_handler.js';
 import postsHandler from '../handler/posts_handler.js';
 import interactionsHandler from '../handler/interactions_handler.js';
 import syncStateHandler from '../handler/sync_state_handler.js';
+import cursorService from '../config/services/cursor_service.js';
 
 async function ingestionStream() {
 
-  const jetstream = new Jetstream('https://jetstream.us-east.bsky.network')
-  let sequence: number | undefined;
+  const jetstream = new Jetstream('https://jetstream.us-east.bsky.network');
+  let sequence : number | undefined;
+   sequence = await cursorService();
 
   const cursor: CursorStore = {
     load: async () => sequence,   // number | undefined

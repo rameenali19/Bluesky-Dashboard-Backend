@@ -27,19 +27,19 @@ async function ingestionStream() {
    const user_id = await userHandler(evt);
 
     if (evt.commit.collection==='app.bsky.feed.post'){
-    const post_uri = await postsHandler(evt,user_id);
+    const post = await postsHandler(evt,user_id);
     }
     if (evt.commit.collection==='app.bsky.feed.like'){
     const table = 'likes';
-    const res = await interactionsHandler(evt,user_id,table);
+    const like = await interactionsHandler(evt,user_id,table);
     }
     if (evt.commit.collection==='app.bsky.feed.repost'){
     const table = 'reposts';
-    const res = await interactionsHandler(evt,user_id,table);
+    const repost = await interactionsHandler(evt,user_id,table);
     }
 
-    await syncStateHandler(evt.seq);
-    await jetstreamEventhandler(evt.seq);
+    const seq = await syncStateHandler(evt.seq);
+    const event = await jetstreamEventhandler(evt,user_id);
     
     sequence = evt.seq;
 

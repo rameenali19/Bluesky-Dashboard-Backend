@@ -4,6 +4,7 @@ import postsHandler from '../handler/posts_handler.js';
 import interactionsHandler from '../handler/interactions_handler.js';
 import syncStateHandler from '../handler/sync_state_handler.js';
 import cursorService from '../config/services/cursor_service.js';
+import jetstreamEventhandler from '../handler/jetstream_events_handler.js';
 
 async function ingestionStream() {
 
@@ -38,6 +39,7 @@ async function ingestionStream() {
     }
 
     await syncStateHandler(evt.seq);
+    await jetstreamEventhandler(evt.seq);
     
     sequence = evt.seq;
 

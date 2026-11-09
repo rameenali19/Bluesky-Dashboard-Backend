@@ -13,7 +13,7 @@ async function ingestionStream() {
 
   const cursor: CursorStore = {
     load: async () => sequence,   // number | undefined
-    save: async (seq) => { sequence =  await cursorService() },
+    save: async (seq) => { sequence = seq },
   }
 
   for await (const evt of jetstream.live({
@@ -39,7 +39,7 @@ async function ingestionStream() {
 
     const cursor = await syncStateHandler(evt.seq);
     
-    sequence =  await cursorService();
+    sequence = cursor;
 
   }
 }

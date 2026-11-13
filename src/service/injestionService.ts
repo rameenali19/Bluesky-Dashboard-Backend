@@ -6,7 +6,7 @@ import syncStateHandler from '../handler/sync_state_handler.js';
 import cursorHandler from '../handler/cursor_handler.js';
 import jetstreamEventhandler from '../handler/jetstream_events_handler.js';
 
-async function ingestionStream() {
+async function injestionService() {
 
   const jetstream = new Jetstream('https://jetstream.us-east.bsky.network');
   let sequence : number | undefined;
@@ -45,4 +45,4 @@ async function ingestionStream() {
 
   }
 }
-export default ingestionStream;
+export default injestionService;

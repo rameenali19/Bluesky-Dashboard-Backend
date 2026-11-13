@@ -1,3 +1,3 @@
-import ingestionStream from "./injestion/injestionStream.js";
+import injestionService from "./service/injestionService.js";
 
-ingestionStream();
+injestionService();

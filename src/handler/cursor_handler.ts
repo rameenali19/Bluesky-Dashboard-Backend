@@ -1,6 +1,6 @@
 import pool from "../database/database.js";
 
-async function cursorService() {
+async function cursorHandler() {
 
   try {
     const result = await pool.query(`
@@ -31,4 +31,4 @@ async function cursorService() {
   }
 }
 
-export default cursorService;
+export default cursorHandler;

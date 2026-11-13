@@ -1,4 +1,4 @@
-import pool from "../config/database.js";
+import pool from "../database/database.js";
 
 async function jetstreamEventhandler(evt:any,user_id:number){
 

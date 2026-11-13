@@ -11,7 +11,7 @@ async function cursorService(){
       
       if(result.rows.length===0) return undefined;
       
-     else  return result.rows[0].last_cursor;
+     else  return Number(result.rows[0].last_cursor);
   }
   
   catch(error){

@@ -5,7 +5,6 @@ import interactionsHandler from '../handler/interactions_handler.js';
 import syncStateHandler from '../handler/sync_state_handler.js';
 import cursorService from '../services/cursor_service.js';
 import jetstreamEventhandler from '../handler/jetstream_events_handler.js';
-import cursorValidity from '../services/cursor_validity_service.js';
 
 async function ingestionStream() {
 

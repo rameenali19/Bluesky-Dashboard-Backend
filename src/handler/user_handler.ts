@@ -1,4 +1,4 @@
-import pool from '../database/postgresConfig.js'
+import pool from '../databaseConfigs/postgresConfig.js'
 
 async function userHandler(evt: any) {
 

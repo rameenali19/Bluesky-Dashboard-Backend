@@ -12,3 +12,5 @@ if (!MONGO_DB_URL) {
 }
 
 const client = new MongoClient(MONGO_DB_URL);
+
+export default client;

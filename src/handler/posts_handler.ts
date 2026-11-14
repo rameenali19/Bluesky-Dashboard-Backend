@@ -1,4 +1,4 @@
-import pool from '../database/dbConfig.js'
+import pool from '../database/postgresConfig.js'
 
 async function postsHandler(evt: any,user_id: number) {
 

@@ -9,9 +9,9 @@ async function cdcDispatcherService() {
 
     try {
 
-      await fetchUnsyncedPosts();
-      await fetchUnsyncedLikes();
-      await fetchUnsyncedReposts();
+      const posts = await fetchUnsyncedPosts();
+      const likes = await fetchUnsyncedLikes();
+      const reposts = await fetchUnsyncedReposts();
 
     }
 

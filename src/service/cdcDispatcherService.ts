@@ -2,6 +2,9 @@ import cron from 'node-cron';
 import fetchUnsyncedLikes from '../cdc/fetchUnsyncedLikes.js';
 import fetchUnsyncedPosts from '../cdc/fetchUnsyncedPosts.js';
 import fetchUnsyncedReposts from '../cdc/fetchUnsyncedReposts.js';
+import likesJob from '../jobs/likesJob.js';
+import postsJob from '../jobs/postsJob.js';
+import repostsJob from '../jobs/repostsJob.js';
 
 async function cdcDispatcherService() {
 
@@ -10,6 +13,9 @@ async function cdcDispatcherService() {
     try {
 
       const posts = await fetchUnsyncedPosts();
+      if(posts?.length!=0){
+        await postsJob(posts);
+      }
       const likes = await fetchUnsyncedLikes();
       const reposts = await fetchUnsyncedReposts();
 

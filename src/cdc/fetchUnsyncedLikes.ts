@@ -13,7 +13,7 @@ async function fetchUnsyncedLikes() {
       LIMIT 100;
       `)
 
-    return likes;
+    return likes.rows;
 
   }
 

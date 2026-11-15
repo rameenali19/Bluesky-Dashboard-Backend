@@ -17,6 +17,9 @@ async function cdcDispatcherService() {
         await postsJob(posts);
       }
       const likes = await fetchUnsyncedLikes();
+      if(likes?.length!=0){
+        await likesJob(likes);
+      }
       const reposts = await fetchUnsyncedReposts();
 
     }

@@ -2,7 +2,7 @@ import likesQueue from "../queues/likesQueue.js";
 
 async function likesJob(likesData: any[] | undefined) {
 
-  if(likesData===undefined) return;
+  if (likesData === undefined) return;
 
   const job = await likesQueue.addBulk(
     likesData.map(like => ({

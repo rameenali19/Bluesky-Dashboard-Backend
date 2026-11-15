@@ -13,7 +13,7 @@ async function fetchUnsyncedReposts() {
       LIMIT 100;
       `)
 
-    return reposts;
+    return reposts.rows;
 
   }
 

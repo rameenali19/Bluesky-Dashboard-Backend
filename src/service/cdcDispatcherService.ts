@@ -1,4 +1,3 @@
-import pool from "../databaseConfigs/postgresConfig.js";
 import cron from 'node-cron';
 
 async function cdcDispatcherService(){

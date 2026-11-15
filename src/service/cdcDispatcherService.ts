@@ -15,7 +15,7 @@ async function cdcDispatcherService() {
 
     }
 
-    catch(error){
+    catch (error) {
       console.log("CDC Dispatcher failed: ", error);
     }
 

@@ -1,16 +1,16 @@
 import pool from "../databaseConfigs/postgresConfig.js";
 
-async function fetchUnsyncedLikes(){
+async function fetchUnsyncedLikes() {
 
   try {
-  
 
 
-    }
 
-    catch(error){
-      console.log("Unsynced Likes fetching failed: ", error);
-    }
+  }
+
+  catch (error) {
+    console.log("Unsynced Likes fetching failed: ", error);
+  }
 
 }
 

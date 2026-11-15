@@ -1,16 +1,16 @@
 import pool from "../databaseConfigs/postgresConfig.js";
 
-async function fetchUnsyncedReposts(){
+async function fetchUnsyncedReposts() {
 
   try {
-  
 
 
-    }
 
-    catch(error){
-      console.log("Unsynced Reosts fetching failed: ", error);
-    }
+  }
+
+  catch (error) {
+    console.log("Unsynced Reosts fetching failed: ", error);
+  }
 
 }
 

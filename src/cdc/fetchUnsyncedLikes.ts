@@ -7,9 +7,11 @@ async function fetchUnsyncedLikes() {
     const likes = await pool.query(`
       SELECT * 
       FROM likes
-      WHERE mongodb_synced_at IS NULL 
+      WHERE (mongodb_synced_at IS NULL 
       OR
-      postgres_updated > mongodb_synced_at
+      postgres_updated > mongodb_synced_at) 
+      AND 
+      deleted = false
       LIMIT 100;
       `)
 

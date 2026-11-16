@@ -7,8 +7,8 @@ async function fetchUnsyncedPosts() {
     const posts = await pool.query(`
       UPDATE posts 
       SET queued_at = NOW()
-      WHERE id IN (
-            SELECT id 
+      WHERE post_uri IN (
+            SELECT post_uri 
             FROM likes
             WHERE (mongodb_synced_at IS NULL 
             OR

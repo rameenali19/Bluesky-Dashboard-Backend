@@ -9,7 +9,7 @@ import likesWorker from '../worker/testWorker.js';
 
 async function cdcDispatcherService() {
 
-  cron.schedule('*/5 * * * * *', async () => {
+  cron.schedule('* * * * *', async () => {
 
     try {
 

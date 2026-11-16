@@ -19,6 +19,11 @@ async function fetchUnsyncedReposts() {
             (queued_at IS NULL
             OR
             queued_at < NOW() - INTERVAL '5 minutes')
+            AND target_post_uri IN ( 
+            SELECT r.target_post_uri
+            FROM reposts r
+            JOIN posts p ON p.post_uri = r.target_post_uri AND p.deleted = false
+            )
             LIMIT 10 )
             RETURNING *
       `)

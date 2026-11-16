@@ -9,7 +9,7 @@ async function fetchUnsyncedPosts() {
       SET queued_at = NOW()
       WHERE post_uri IN (
             SELECT post_uri 
-            FROM likes
+            FROM posts
             WHERE (mongodb_synced_at IS NULL 
             OR
             postgres_updated > mongodb_synced_at) 

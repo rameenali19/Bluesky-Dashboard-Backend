@@ -5,6 +5,7 @@ import fetchUnsyncedReposts from '../cdc/fetchUnsyncedReposts.js';
 import likesJob from '../jobs/likesJob.js';
 import postsJob from '../jobs/postsJob.js';
 import repostsJob from '../jobs/repostsJob.js';
+import likesWorker from '../worker/testWorker.js';
 
 async function cdcDispatcherService() {
 

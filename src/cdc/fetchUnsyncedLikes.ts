@@ -12,7 +12,7 @@ async function fetchUnsyncedLikes() {
       postgres_updated > mongodb_synced_at) 
       AND 
       deleted = false
-      LIMIT 100;
+      LIMIT 10;
       `)
 
     return likes.rows;

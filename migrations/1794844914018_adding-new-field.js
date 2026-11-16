@@ -1,18 +1,22 @@
-/**
- * @type {import('node-pg-migrate').ColumnDefinitions | undefined}
- */
-export const shorthands = undefined;
+export const up = (pgm) => {
+  pgm.sql(`
+    ALTER TABLE posts
+    ADD COLUMN queued_at TIMESTAMPTZ;
 
-/**
- * @param pgm {import('node-pg-migrate').MigrationBuilder}
- * @param run {() => void | undefined}
- * @returns {Promise<void> | void}
- */
-export const up = (pgm) => {};
+    ALTER TABLE likes
+    ADD COLUMN queued_at TIMESTAMPTZ;
 
-/**
- * @param pgm {import('node-pg-migrate').MigrationBuilder}
- * @param run {() => void | undefined}
- * @returns {Promise<void> | void}
- */
-export const down = (pgm) => {};
+    ALTER TABLE reposts
+    ADD COLUMN queued_at TIMESTAMPTZ;
+    `)
+}
+
+export const down = (pgm) => {
+  pgm.sql(`
+    ALTER TABLE posts DROP COLUMN queued_at;
+
+    ALTER TABLE likes DROP COLUMN queued_at;
+
+    ALTER TABLE reposts DROP COLUMN queued_at;
+    `)
+}

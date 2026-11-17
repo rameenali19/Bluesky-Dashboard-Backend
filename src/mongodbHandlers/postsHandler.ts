@@ -1,4 +1,3 @@
-import type { Timestamp } from "mongodb";
 import db from "../databaseConfigs/mongoConfig.js";
 
 interface Posts {

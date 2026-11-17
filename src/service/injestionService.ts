@@ -1,10 +1,10 @@
 import { Jetstream, type CursorStore } from '@bsky/jetstream'
-import userHandler from '../handler/user_handler.js';
-import postsHandler from '../handler/posts_handler.js';
-import interactionsHandler from '../handler/interactions_handler.js';
-import syncStateHandler from '../handler/sync_state_handler.js';
-import cursorHandler from '../handler/cursor_handler.js';
-import jetstreamEventhandler from '../handler/jetstream_events_handler.js';
+import userHandler from '../postgresHandlers/user_handler.js';
+import postsHandler from '../postgresHandlers/posts_handler.js';
+import interactionsHandler from '../postgresHandlers/interactions_handler.js';
+import syncStateHandler from '../postgresHandlers/sync_state_handler.js';
+import cursorHandler from '../postgresHandlers/cursor_handler.js';
+import jetstreamEventhandler from '../postgresHandlers/jetstream_events_handler.js';
 
 async function injestionService() {
 

@@ -1,18 +1,18 @@
 import type { Timestamp } from "mongodb";
 import db from "../databaseConfigs/mongoConfig.js";
 
-interface posts {
-  _id: Text,
+interface Posts {
+  _id: string,
   like_count: number,
   repost_count: number,
-  post_text: Text,
-  created_at: Timestamp,
-  updated_at: Timestamp
+  post_text: string,
+  created_at: Date,
+  updated_at: Date
 }
 
 async function postsHandler(data: any) {
 
-  await db.collection("posts").updateOne(
+  await db.collection<Posts>("posts").updateOne(
     { _id: data.post_uri },
     {
       $set: {

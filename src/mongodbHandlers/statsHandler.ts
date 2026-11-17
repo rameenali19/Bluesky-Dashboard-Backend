@@ -21,7 +21,7 @@ async function statsHandler(table: string) {
     )
   }
 
-  if (table === "likes") {
+  else if (table === "likes") {
     await db.collection<dashboardStats>("dashboard_stats").updateOne(
       { _id: 1 },
       {
@@ -33,7 +33,7 @@ async function statsHandler(table: string) {
     )
   }
 
-  else {
+  else if (table === "reposts") {
     await db.collection<dashboardStats>("dashboard_stats").updateOne(
       { _id: 1 },
       {

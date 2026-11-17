@@ -12,9 +12,9 @@ async function postsHandler(data: any) {
         created_at: data.created_at,
         updated_at: new Date()
       }
-    }
+    },
+    { upsert: true }
   )
-
 }
 
 export default postsHandler;

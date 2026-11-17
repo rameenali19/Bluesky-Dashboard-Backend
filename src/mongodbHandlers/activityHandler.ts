@@ -1,12 +1,58 @@
 import db from "../databaseConfigs/mongoConfig.js";
 
-async function activityHandler() {
+interface Activity {
+  _id: Date,
+  posts: number,
+  likes: number,
+  reposts: number,
+  total_activity: number
+}
 
-  await db.collection("activity_per_minute").updateOne(
-    {},
-    {},
-    {}
-  )
+async function activityHandler(data: any, table: string) {
+
+  if (data.created_at === null) return
+
+  const minutes = new Date(data.created_at);
+  minutes.setSeconds(0, 0);
+
+  if (table === "posts") {
+    await db.collection<Activity>("activity_per_minute").updateOne(
+      { _id: minutes },
+      {
+        $inc: {
+          posts: 1,
+          total_activity: 1
+        }
+      },
+      { upsert: true }
+    )
+  }
+
+  else if (table === "likes") {
+    await db.collection<Activity>("activity_per_minute").updateOne(
+      { _id: minutes },
+      {
+        $inc: {
+          likes: 1,
+          total_activity: 1
+        }
+      },
+      { upsert: true }
+    )
+  }
+
+  else if (table === "reposts") {
+    await db.collection<Activity>("activity_per_minute").updateOne(
+      { _id: minutes },
+      {
+        $inc: {
+          reposts: 1,
+          total_activity: 1
+        }
+      },
+      { upsert: true }
+    )
+  }
 
 }
 

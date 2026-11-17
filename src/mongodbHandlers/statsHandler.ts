@@ -1,6 +1,6 @@
 import db from "../databaseConfigs/mongoConfig.js";
 
-interface dashboardStats {
+interface DashboardStats {
   _id: number,
   posts: number,
   likes: number,
@@ -10,7 +10,7 @@ interface dashboardStats {
 async function statsHandler(table: string) {
 
   if (table === "posts") {
-    await db.collection<dashboardStats>("dashboard_stats").updateOne(
+    await db.collection<DashboardStats>("dashboard_stats").updateOne(
       { _id: 1 },
       {
         $inc: {
@@ -22,7 +22,7 @@ async function statsHandler(table: string) {
   }
 
   else if (table === "likes") {
-    await db.collection<dashboardStats>("dashboard_stats").updateOne(
+    await db.collection<DashboardStats>("dashboard_stats").updateOne(
       { _id: 1 },
       {
         $inc: {
@@ -34,7 +34,7 @@ async function statsHandler(table: string) {
   }
 
   else if (table === "reposts") {
-    await db.collection<dashboardStats>("dashboard_stats").updateOne(
+    await db.collection<DashboardStats>("dashboard_stats").updateOne(
       { _id: 1 },
       {
         $inc: {

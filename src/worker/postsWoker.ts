@@ -8,7 +8,7 @@ const worker = new Worker("postsQueue", async (job) => {
 
   await postsHandler(job.data);
   await statsHandler("posts");
-  await activityHandler();
+  await activityHandler(job.data, "posts");
 
 },
   {

@@ -1,9 +1,19 @@
+import type { Timestamp } from "mongodb";
 import db from "../databaseConfigs/mongoConfig.js";
+
+interface posts {
+  _id: Text,
+  like_count: number,
+  repost_count: number,
+  post_text: Text,
+  created_at: Timestamp,
+  updated_at: Timestamp
+}
 
 async function postsHandler(data: any) {
 
   await db.collection("posts").updateOne(
-    { post_uri: data.post_uri },
+    { _id: data.post_uri },
     {
       $set: {
         like_count: 0,

@@ -17,7 +17,8 @@
     "mongodb": "^7.9.0",
     "node-cron": "^4.6.0",
     "node-pg-migrate": "^9.0.0",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "yake-ts": "^1.2.5"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

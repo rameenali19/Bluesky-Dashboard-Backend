@@ -16,14 +16,14 @@ async function cdcDispatcherService() {
       if (posts?.length !== 0) {
         await postsJob(posts);
       }
-      const likes = await fetchUnsyncedLikes();
-      if (likes?.length !== 0) {
-        await likesJob(likes);
-      }
-      const reposts = await fetchUnsyncedReposts();
-      if (reposts?.length !== 0) {
-        await repostsJob(reposts);
-      }
+      // const likes = await fetchUnsyncedLikes();
+      // if (likes?.length !== 0) {
+      //   await likesJob(likes);
+      // }
+      // const reposts = await fetchUnsyncedReposts();
+      // if (reposts?.length !== 0) {
+      //   await repostsJob(reposts);
+      // }
 
     }
 

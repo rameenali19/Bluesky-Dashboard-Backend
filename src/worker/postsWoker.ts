@@ -4,6 +4,7 @@ import postsHandler from "../mongodbHandlers/postsHandler.js";
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
 import keywordHandlers from "../mongodbHandlers/keywordHandler.js";
+import updatingStatus from "../postgresHandlers/updatingStatus.js";
 
 const worker = new Worker("postsQueue", async (job) => {
 
@@ -11,6 +12,8 @@ const worker = new Worker("postsQueue", async (job) => {
   await statsHandler("posts");
   await activityHandler(job.data, "posts");
   await keywordHandlers(job.data);
+  await updatingStatus(job.data.post_uri);
+
 },
   {
     connection: redisConfig

@@ -10,7 +10,7 @@ interface Activity {
 
 async function activityHandler(data: any, table: string) {
 
-  if (data.created_at === null) return
+  if (!data.created_at) return
 
   const minutes = new Date(data.created_at);
   minutes.setSeconds(0, 0);
@@ -22,6 +22,10 @@ async function activityHandler(data: any, table: string) {
         $inc: {
           posts: 1,
           total_activity: 1
+        },
+        $setOnInsert: {
+          likes: 0,
+          reposts: 0
         }
       },
       { upsert: true }
@@ -35,6 +39,10 @@ async function activityHandler(data: any, table: string) {
         $inc: {
           likes: 1,
           total_activity: 1
+        },
+        $setOnInsert: {
+          posts: 0,
+          reposts: 0
         }
       },
       { upsert: true }
@@ -48,6 +56,10 @@ async function activityHandler(data: any, table: string) {
         $inc: {
           reposts: 1,
           total_activity: 1
+        },
+        $setOnInsert: {
+          likes: 0,
+          posts: 0
         }
       },
       { upsert: true }

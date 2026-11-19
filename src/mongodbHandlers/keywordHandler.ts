@@ -10,33 +10,39 @@ interface keywords {
 
 async function keywordHandler(data: any) {
 
-  if (!data.created_at) return;
+  try {
 
-  const result = extractKeywords(data.text);
-  if (result.length === 0) return;
+    if (!data.created_at) return;
 
-  const trending = result[0].keyword;
+    const result = extractKeywords(data.text);
+    if (result.length === 0) return;
 
-  const start = new Date(data.created_at);
-  start.setUTCMinutes(0, 0, 0);
-  const end = new Date(start);
-  end.setUTCHours(end.getUTCHours() + 1);
+    const trending = result[0].keyword;
 
-  await db.collection<keywords>("trending_keywords").updateOne(
-    {
-      keyword: trending,
-      start: start
-    },
-    {
-      $setOnInsert: {
-        end: end
+    const start = new Date(data.created_at);
+    start.setUTCMinutes(0, 0, 0);
+    const end = new Date(start);
+    end.setUTCHours(end.getUTCHours() + 1);
+
+    await db.collection<keywords>("trending_keywords").updateOne(
+      {
+        keyword: trending,
+        start: start
       },
-      $inc: {
-        post_count: 1
-      }
-    },
-    { upsert: true }
-  )
+      {
+        $setOnInsert: {
+          end: end
+        },
+        $inc: {
+          post_count: 1
+        }
+      },
+      { upsert: true }
+    )
+  }
+  catch (error) {
+    console.log("keywords ", error);
+  }
 }
 
 export default keywordHandler;

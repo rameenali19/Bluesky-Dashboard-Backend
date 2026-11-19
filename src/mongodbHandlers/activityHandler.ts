@@ -10,62 +10,67 @@ interface Activity {
 
 async function activityHandler(data: any, table: string) {
 
-  if (!data.created_at) return
+  try {
 
-  const minutes = new Date(data.created_at);
-  minutes.setSeconds(0, 0);
+    if (!data.created_at) return
 
-  if (table === "posts") {
-    await db.collection<Activity>("activity_per_minute").updateOne(
-      { _id: minutes },
-      {
-        $inc: {
-          posts: 1,
-          total_activity: 1
+    const minutes = new Date(data.created_at);
+    minutes.setSeconds(0, 0);
+
+    if (table === "posts") {
+      await db.collection<Activity>("activity_per_minute").updateOne(
+        { _id: minutes },
+        {
+          $inc: {
+            posts: 1,
+            total_activity: 1
+          },
+          $setOnInsert: {
+            likes: 0,
+            reposts: 0
+          }
         },
-        $setOnInsert: {
-          likes: 0,
-          reposts: 0
-        }
-      },
-      { upsert: true }
-    )
-  }
+        { upsert: true }
+      )
+    }
 
-  else if (table === "likes") {
-    await db.collection<Activity>("activity_per_minute").updateOne(
-      { _id: minutes },
-      {
-        $inc: {
-          likes: 1,
-          total_activity: 1
+    else if (table === "likes") {
+      await db.collection<Activity>("activity_per_minute").updateOne(
+        { _id: minutes },
+        {
+          $inc: {
+            likes: 1,
+            total_activity: 1
+          },
+          $setOnInsert: {
+            posts: 0,
+            reposts: 0
+          }
         },
-        $setOnInsert: {
-          posts: 0,
-          reposts: 0
-        }
-      },
-      { upsert: true }
-    )
-  }
+        { upsert: true }
+      )
+    }
 
-  else if (table === "reposts") {
-    await db.collection<Activity>("activity_per_minute").updateOne(
-      { _id: minutes },
-      {
-        $inc: {
-          reposts: 1,
-          total_activity: 1
+    else if (table === "reposts") {
+      await db.collection<Activity>("activity_per_minute").updateOne(
+        { _id: minutes },
+        {
+          $inc: {
+            reposts: 1,
+            total_activity: 1
+          },
+          $setOnInsert: {
+            likes: 0,
+            posts: 0
+          }
         },
-        $setOnInsert: {
-          likes: 0,
-          posts: 0
-        }
-      },
-      { upsert: true }
-    )
+        { upsert: true }
+      )
+    }
   }
-
+  catch (error) {
+    console.log("activity handling", error);
+  }
 }
 
 export default activityHandler;

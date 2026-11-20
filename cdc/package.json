@@ -14,5 +14,13 @@
     "@types/node": "^26.6.6",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "bullmq": "^6.7.8",
+    "dotenv": "^18.0.10",
+    "ioredis": "^6.0.0",
+    "mongodb": "^7.9.1",
+    "pg": "^8.23.1",
+    "yake-ts": "^1.2.5"
   }
 }

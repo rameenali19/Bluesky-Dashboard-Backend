@@ -1,4 +1,4 @@
-import pool from '../databaseConfigs/postgresConfig.js'
+import pool from '../databaseConfig/postgresConfig.js'
 
 async function interactionsHandler(evt: any, user_id: number, table: string) {
 

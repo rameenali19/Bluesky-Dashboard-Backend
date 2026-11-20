@@ -4,7 +4,7 @@ import postsHandler from "../mongodbHandlers/postsHandler.js";
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
 import keywordHandlers from "../mongodbHandlers/keywordHandler.js";
-import updatingStatus from "../postgresHandlers/updatingStatus.js";
+import updatingStatus from "../postgresHandler/updatingStatus.js";
 
 const worker = new Worker("postsQueue", async (job) => {
 

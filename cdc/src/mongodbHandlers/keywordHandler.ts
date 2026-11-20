@@ -1,4 +1,4 @@
-import db from "../databaseConfigs/mongoConfig.js";
+import db from "../databaseConfig/mongoConfig.js"
 import { extractKeywords } from "yake-ts";
 
 interface keywords {
@@ -17,7 +17,8 @@ async function keywordHandler(data: any) {
     const result = extractKeywords(data.text);
     if (result.length === 0) return;
 
-    const trending = result[0].keyword;
+    const trending = result[0]?.keyword;
+    if (!trending) return;
 
     const start = new Date(data.created_at);
     start.setUTCMinutes(0, 0, 0);

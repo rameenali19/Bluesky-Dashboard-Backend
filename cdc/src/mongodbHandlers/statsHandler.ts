@@ -1,5 +1,4 @@
-import db from "../databaseConfigs/mongoConfig.js";
-
+import db from "../databaseConfig/mongoConfig.js"
 interface DashboardStats {
   _id: number,
   posts: number,

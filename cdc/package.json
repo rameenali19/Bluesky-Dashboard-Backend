@@ -2,17 +2,18 @@
   "name": "cdc",
   "version": "1.0.0",
   "description": "",
- "scripts": {
-  "dev": "tsx watch src/index.ts",
-  "build": "tsc",
-  "start": "node dist/index.js"
-},
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
     "@types/node": "^26.6.6",
+    "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.23.1",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
@@ -22,6 +23,7 @@
     "dotenv": "^18.0.10",
     "ioredis": "^6.0.0",
     "mongodb": "^7.9.1",
+    "node-cron": "^4.6.0",
     "pg": "^8.23.1",
     "yake-ts": "^1.2.5"
   }

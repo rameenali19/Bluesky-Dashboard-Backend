@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import {Pool} from 'pg';
 
-dotenv.config();
+dotenv.config({path: '../.env'});
 
 const {
   POSTGRES_DB_HOST,

@@ -1,5 +1,4 @@
-import pool from '../databaseConfigs/postgresConfig.js'
-
+import pool from "../databaseConfig/postgresConfig.js";
 async function updatingStatus(post_uri: String) {
 
   try {

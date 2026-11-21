@@ -9,38 +9,38 @@ import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.j
 async function injestionService() {
 
   const jetstream = new Jetstream('https://jetstream.us-east.bsky.network');
-  let sequence : number | undefined;
-   sequence = await cursorHandler();
+  let sequence: number | undefined;
+  sequence = await cursorHandler();
 
   const cursor: CursorStore = {
     load: async () => sequence,   // number | undefined
-    save: async (seq) => { sequence = seq },
+    save: async (seq: number) => { sequence = seq },
   }
 
   for await (const evt of jetstream.live({
     collections: ['app.bsky.feed.post', 'app.bsky.feed.like', 'app.bsky.feed.repost'],
     kinds: ['commit'], cursor,
   })) {
-    
+
     if (evt.kind !== 'commit') continue;
 
-   const user_id = await userHandler(evt);
+    const user_id = await userHandler(evt);
 
-    if (evt.commit.collection==='app.bsky.feed.post'){
-    const post = await postsHandler(evt,user_id);
+    if (evt.commit.collection === 'app.bsky.feed.post') {
+      const post = await postsHandler(evt, user_id);
     }
-    if (evt.commit.collection==='app.bsky.feed.like'){
-    const table = 'likes';
-    const like = await interactionsHandler(evt,user_id,table);
+    if (evt.commit.collection === 'app.bsky.feed.like') {
+      const table = 'likes';
+      const like = await interactionsHandler(evt, user_id, table);
     }
-    if (evt.commit.collection==='app.bsky.feed.repost'){
-    const table = 'reposts';
-    const repost = await interactionsHandler(evt,user_id,table);
+    if (evt.commit.collection === 'app.bsky.feed.repost') {
+      const table = 'reposts';
+      const repost = await interactionsHandler(evt, user_id, table);
     }
 
     const seq = await syncStateHandler(evt.seq);
-    const event = await jetstreamEventhandler(evt,user_id);
-    
+    const event = await jetstreamEventhandler(evt, user_id);
+
     sequence = evt.seq;
 
   }

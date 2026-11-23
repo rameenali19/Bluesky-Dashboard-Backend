@@ -5,20 +5,9 @@ import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
 import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
 import cursorHandler from '../postgresHandlers/cursorHandler.js';
 import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.js';
-import type { PostArr } from '../interface/arrayInterfaces.js';
-import type { LikeArr } from '../interface/arrayInterfaces.js';
-import type { UserArr } from '../interface/arrayInterfaces.js';
-import type { RepostArr } from '../interface/arrayInterfaces.js';
-import type { CursorArr } from '../interface/arrayInterfaces.js';
-import type { HistoryArr } from '../interface/arrayInterfaces.js';
-import { isIP } from 'node:net';
+import insertionHandler from '../insertionHandler.ts/insertionHandler.js';
 
-const postArr: PostArr[] = [];
-const likeArr: LikeArr[] = [];
-const repostArr: RepostArr[] = [];
-const userArr: UserArr[] = [];
-const cursorArr: CursorArr[] = [];
-const historyArr: HistoryArr[] = [];
+const eventArr: any[] = [];
 
 export async function injestionService() {
 
@@ -31,6 +20,8 @@ export async function injestionService() {
     load: async () => sequence,   // number | undefined
     save: async (seq: number) => { sequence = seq },
   }
+  let time = Date.now();
+  let isInserting = false;
   let count: number = 0;
 
   for await (const evt of jetstream.live({
@@ -40,66 +31,30 @@ export async function injestionService() {
 
     if (evt.kind !== 'commit') continue;
 
-    const userData = {
-      id: evt.did
-    }
+    eventArr.push(evt);
 
-    userArr.push(userData);
-    count++
-    console.log(count);
-    if (count === 500) return;
-
-    sequence = evt.seq;
-
-  }
-}
-
-export async function bulkInsert() {
-  let time = Date.now();
-  let isInserting = false;
-
-  setInterval(async () => {
-
-    const length = userArr.length;
+    const length = eventArr.length;
     const TwoMinute = Date.now() - time >= 120000;
 
     if ((length >= 500 || (length > 0 && TwoMinute)) && !isInserting) {
       isInserting = true;
-      let batch: UserArr[];
-      if (length < 500) { batch = userArr.splice(0, length); }
-      else { batch = userArr.splice(0, 500); }
+
+      const batch = eventArr.splice(0, Math.min(500, length));
 
       try {
-        await userHandler(batch);
+        insertionHandler(batch);
         time = Date.now();
       }
       catch (error) {
         console.log("Insertion failed: ", error);
-        userArr.unshift(...batch);
+        eventArr.unshift(...batch);
       }
       finally {
         isInserting = false
       }
     }
-  }, 1000);
+
+    sequence = evt.seq;
+
+  }
 }
-
-
-
-
-// const user_id = await userHandler(evt);
-
-// if (evt.commit.collection === 'app.bsky.feed.post') {
-//   const post = await postsHandler(evt, user_id);
-// }
-// if (evt.commit.collection === 'app.bsky.feed.like') {
-//   const table = 'likes';
-//   const like = await interactionsHandler(evt, user_id, table);
-// }
-// if (evt.commit.collection === 'app.bsky.feed.repost') {
-//   const table = 'reposts';
-//   const repost = await interactionsHandler(evt, user_id, table);
-// }
-
-// const seq = await syncStateHandler(evt.seq);
-// const event = await jetstreamEventhandler(evt, user_id);

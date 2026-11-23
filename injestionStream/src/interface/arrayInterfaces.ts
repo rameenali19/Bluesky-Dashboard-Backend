@@ -36,5 +36,5 @@ export interface HistoryArr {
   collection_name: string,
   operation: string,
   record_key: string,
-  event_data: Record<string, unknown>
+  event_data: string
 }

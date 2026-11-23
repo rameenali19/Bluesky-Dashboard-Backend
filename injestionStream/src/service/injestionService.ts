@@ -9,6 +9,54 @@ import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.j
 async function injestionService() {
 
   const jetstream = new Jetstream('https://jetstream.us-east.bsky.network');
+  interface PostArr {
+    user_id: string,
+    post_uri: string;
+    post_text: string,
+    record_key: string,
+    created_at: Date
+  }
+
+  interface UserArr {
+    id: string,
+  }
+
+  interface LikeArr {
+    user_id: string,
+    target_post_uri: string,
+    record_key: string,
+    created_at: Date
+  }
+
+  interface RepostArr {
+    user_id: string,
+    target_post_uri: string,
+    record_key: string,
+    created_at: Date
+  }
+
+  interface CursorArr {
+    last_cursor: number
+  }
+
+  interface HistoryArr {
+    user_id: string,
+    cursor: number,
+    event_time: Date,
+    event_type: string,
+    collection_name: string,
+    operation: string,
+    record_key: string,
+    event_data: Record<string, unknown>
+  }
+
+  const postArr: PostArr[] = [];
+  const likeArr: LikeArr[] = [];
+  const repostArr: RepostArr[] = [];
+  const userArr: UserArr[] = [];
+  const cursorArr: CursorArr[] = [];
+  const historyArr: HistoryArr[] = [];
+
   let sequence: number | undefined;
   sequence = await cursorHandler();
 

@@ -19,7 +19,7 @@ const userArr: UserArr[] = [];
 const cursorArr: CursorArr[] = [];
 const historyArr: HistoryArr[] = [];
 
-async function injestionService() {
+export async function injestionService() {
 
   const jetstream = new Jetstream('https://jetstream.us-east.bsky.network');
 
@@ -30,6 +30,7 @@ async function injestionService() {
     load: async () => sequence,   // number | undefined
     save: async (seq: number) => { sequence = seq },
   }
+  let count: number = 0;
 
   for await (const evt of jetstream.live({
     collections: ['app.bsky.feed.post', 'app.bsky.feed.like', 'app.bsky.feed.repost'],
@@ -43,30 +44,16 @@ async function injestionService() {
     }
 
     userArr.push(userData);
-
-    // const user_id = await userHandler(evt);
-
-    // if (evt.commit.collection === 'app.bsky.feed.post') {
-    //   const post = await postsHandler(evt, user_id);
-    // }
-    // if (evt.commit.collection === 'app.bsky.feed.like') {
-    //   const table = 'likes';
-    //   const like = await interactionsHandler(evt, user_id, table);
-    // }
-    // if (evt.commit.collection === 'app.bsky.feed.repost') {
-    //   const table = 'reposts';
-    //   const repost = await interactionsHandler(evt, user_id, table);
-    // }
-
-    // const seq = await syncStateHandler(evt.seq);
-    // const event = await jetstreamEventhandler(evt, user_id);
+    count++
+    console.log(count);
+    if (count === 500) return;
 
     sequence = evt.seq;
 
   }
 }
 
-async function bulkInsert() {
+export async function bulkInsert() {
 
   if (userArr.length === 500) {
     await userHandler(userArr);
@@ -74,4 +61,23 @@ async function bulkInsert() {
   }
 
 }
-export default injestionService;
+
+
+
+
+// const user_id = await userHandler(evt);
+
+// if (evt.commit.collection === 'app.bsky.feed.post') {
+//   const post = await postsHandler(evt, user_id);
+// }
+// if (evt.commit.collection === 'app.bsky.feed.like') {
+//   const table = 'likes';
+//   const like = await interactionsHandler(evt, user_id, table);
+// }
+// if (evt.commit.collection === 'app.bsky.feed.repost') {
+//   const table = 'reposts';
+//   const repost = await interactionsHandler(evt, user_id, table);
+// }
+
+// const seq = await syncStateHandler(evt.seq);
+// const event = await jetstreamEventhandler(evt, user_id);

@@ -1,3 +1,5 @@
-import injestionService from "./service/injestionService.js";
+import { injestionService } from "./service/injestionService.js";
+import { bulkInsert } from "./service/injestionService.js";
 
-injestionService();
+await injestionService();
+await bulkInsert();

@@ -103,5 +103,10 @@ async function injestionService() {
 
 async function bulkInsert() {
 
+  if (userArr.length === 500) {
+    await userHandler(userArr);
+    userArr.length = 0;
+  }
+
 }
 export default injestionService;

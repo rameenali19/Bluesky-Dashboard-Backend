@@ -1,11 +1,6 @@
 import { Jetstream, type CursorStore } from '@bsky/jetstream'
-import userHandler from '../postgresHandlers/userHandler.js';
-import postsHandler from '../postgresHandlers/postsHandler.js';
-import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
-import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
-import cursorHandler from '../postgresHandlers/cursorHandler.js';
-import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.js';
 import insertionHandler from '../insertionHandler.ts/insertionHandler.js';
+import cursorHandler from '../postgresHandlers/cursorHandler.js';
 
 const eventArr: any[] = [];
 

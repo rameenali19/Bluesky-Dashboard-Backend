@@ -1,4 +1,5 @@
 import pool from '../databaseConfig/postgresConfig.js'
+import type { UserArr } from '../interface/arrayInterfaces.js';
 
 async function userHandler(evt: any) {
 

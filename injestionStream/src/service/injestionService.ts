@@ -5,47 +5,12 @@ import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
 import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
 import cursorHandler from '../postgresHandlers/cursorHandler.js';
 import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.js';
-
-interface PostArr {
-  user_id: string,
-  post_uri: string;
-  post_text: string,
-  record_key: string,
-  created_at: Date
-}
-
-interface UserArr {
-  id: string,
-}
-
-interface LikeArr {
-  user_id: string,
-  target_post_uri: string,
-  record_key: string,
-  created_at: Date
-}
-
-interface RepostArr {
-  user_id: string,
-  target_post_uri: string,
-  record_key: string,
-  created_at: Date
-}
-
-interface CursorArr {
-  last_cursor: number
-}
-
-interface HistoryArr {
-  user_id: string,
-  cursor: number,
-  event_time: Date,
-  event_type: string,
-  collection_name: string,
-  operation: string,
-  record_key: string,
-  event_data: Record<string, unknown>
-}
+import type { PostArr } from '../interface/arrayInterfaces.js';
+import type { LikeArr } from '../interface/arrayInterfaces.js';
+import type { UserArr } from '../interface/arrayInterfaces.js';
+import type { RepostArr } from '../interface/arrayInterfaces.js';
+import type { CursorArr } from '../interface/arrayInterfaces.js';
+import type { HistoryArr } from '../interface/arrayInterfaces.js';
 
 const postArr: PostArr[] = [];
 const likeArr: LikeArr[] = [];

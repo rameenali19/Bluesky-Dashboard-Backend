@@ -11,6 +11,7 @@ import type { UserArr } from '../interface/arrayInterfaces.js';
 import type { RepostArr } from '../interface/arrayInterfaces.js';
 import type { CursorArr } from '../interface/arrayInterfaces.js';
 import type { HistoryArr } from '../interface/arrayInterfaces.js';
+import { isIP } from 'node:net';
 
 const postArr: PostArr[] = [];
 const likeArr: LikeArr[] = [];
@@ -54,12 +55,33 @@ export async function injestionService() {
 }
 
 export async function bulkInsert() {
+  let time = Date.now();
+  let isInserting = false;
 
-  if (userArr.length === 500) {
-    await userHandler(userArr);
-    userArr.length = 0;
-  }
+  setInterval(async () => {
 
+    const length = userArr.length;
+    const TwoMinute = Date.now() - time >= 120000;
+
+    if ((length >= 500 || (length > 0 && TwoMinute)) && !isInserting) {
+      isInserting = true;
+      let batch: UserArr[];
+      if (length < 500) { batch = userArr.splice(0, length); }
+      else { batch = userArr.splice(0, 500); }
+
+      try {
+        await userHandler(batch);
+        time = Date.now();
+      }
+      catch (error) {
+        console.log("Insertion failed: ", error);
+        userArr.unshift(...batch);
+      }
+      finally {
+        isInserting = false
+      }
+    }
+  }, 1000);
 }
 
 

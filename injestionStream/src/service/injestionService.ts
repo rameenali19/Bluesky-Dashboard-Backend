@@ -72,22 +72,28 @@ async function injestionService() {
 
     if (evt.kind !== 'commit') continue;
 
-    const user_id = await userHandler(evt);
-
-    if (evt.commit.collection === 'app.bsky.feed.post') {
-      const post = await postsHandler(evt, user_id);
-    }
-    if (evt.commit.collection === 'app.bsky.feed.like') {
-      const table = 'likes';
-      const like = await interactionsHandler(evt, user_id, table);
-    }
-    if (evt.commit.collection === 'app.bsky.feed.repost') {
-      const table = 'reposts';
-      const repost = await interactionsHandler(evt, user_id, table);
+    const userData = {
+      id: evt.did
     }
 
-    const seq = await syncStateHandler(evt.seq);
-    const event = await jetstreamEventhandler(evt, user_id);
+    userArr.push(userData);
+
+    // const user_id = await userHandler(evt);
+
+    // if (evt.commit.collection === 'app.bsky.feed.post') {
+    //   const post = await postsHandler(evt, user_id);
+    // }
+    // if (evt.commit.collection === 'app.bsky.feed.like') {
+    //   const table = 'likes';
+    //   const like = await interactionsHandler(evt, user_id, table);
+    // }
+    // if (evt.commit.collection === 'app.bsky.feed.repost') {
+    //   const table = 'reposts';
+    //   const repost = await interactionsHandler(evt, user_id, table);
+    // }
+
+    // const seq = await syncStateHandler(evt.seq);
+    // const event = await jetstreamEventhandler(evt, user_id);
 
     sequence = evt.seq;
 

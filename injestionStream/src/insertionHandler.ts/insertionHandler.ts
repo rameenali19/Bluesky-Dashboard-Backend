@@ -4,6 +4,11 @@ import type { UserArr } from '../interface/arrayInterfaces.js';
 import type { RepostArr } from '../interface/arrayInterfaces.js';
 import type { CursorArr } from '../interface/arrayInterfaces.js';
 import type { HistoryArr } from '../interface/arrayInterfaces.js';
+import postsHandler from '../postgresHandlers/postsHandler.js';
+import userHandler from '../postgresHandlers/userHandler.js';
+import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
+import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.js';
+import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
 
 const postArr: PostArr[] = [];
 const likeArr: LikeArr[] = [];
@@ -68,6 +73,8 @@ function insertionHandler(event: any[]) {
     }
     cursorArr.push(cursorData);
   }
+
+  
 };
 
 export default insertionHandler;

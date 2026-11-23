@@ -8,7 +8,8 @@ async function userHandler(user: UserArr[]) {
 
     const result = await pool.query(`
       INSERT INTO users (id)
-        SELECT UNNEST (
+        SELECT*
+        FROM UNNEST (
         $1::TEXT[]
         )
         ON CONFLICT (id) 

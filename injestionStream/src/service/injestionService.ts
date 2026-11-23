@@ -17,7 +17,6 @@ export async function injestionService() {
   }
   let time = Date.now();
   let isInserting = false;
-  let count: number = 0;
 
   for await (const evt of jetstream.live({
     collections: ['app.bsky.feed.post', 'app.bsky.feed.like', 'app.bsky.feed.repost'],

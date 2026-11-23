@@ -1,42 +1,28 @@
 import pool from '../databaseConfig/postgresConfig.js'
+import type { PostArr } from '../interface/arrayInterfaces.js';
 
-async function postsHandler(evt: any,user_id: number) {
+async function userHandler(posts: PostArr[]) {
 
   try {
+    const user_id = posts.map((post) => post.user_id);
+    const post_uri = posts.map((post) => post.post_uri);
+    const post_text = posts.map((post) => post.post_text);
+    const record_key = posts.map((post) => post.record_key);
+    const created_at = posts.map((post) => post.created_at);
 
-  const post_uri=`at://${evt.did}/app.bsky.feed.post/${evt.commit.rkey}`;
-
-  if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {
-  const post_text = evt.commit.record.text;
-  const record_key = evt.commit.rkey;
-  const created_at = new Date(evt.commit.record.createdAt);
-
-  const result = await pool.query(`
- 
-    INSERT INTO posts (post_uri,user_id,post_text,record_key,created_at)
-    VALUES ($1,$2,$3,$4,$5)
-    ON CONFLICT (user_id,record_key) 
-    DO UPDATE SET 
-    post_text = EXCLUDED.post_text,
-    deleted = FALSE,
-    postgres_updated = NOW()
-    RETURNING *`,
-    [post_uri,user_id,post_text,record_key,created_at]);
-
-    return result.rows[0];
-}
-
- else if(evt.commit.operation === 'delete'){
     const result = await pool.query(`
-      UPDATE posts
-      SET deleted = TRUE,
-      postgres_updated = NOW()
-      WHERE post_uri = $1`,
-      [post_uri]);
-       
-      return result.rows[0];
-  }
-
+      INSERT INTO posts (user_id,post_uri,post_text,record_key,created_at)
+        SELECT*
+        FROM UNNEST (
+        $1::TEXT[],
+        $2::TEXT[],
+        $3::TEXT[],
+        $4::TEXT[],
+        $5::TIMESTAMPTZ[]
+        )
+        ON CONFLICT (user_id, record_key) 
+        DO NOTHING`,
+      [user_id, post_uri, post_text, record_key, created_at]);
   }
   catch (error) {
     console.error('Could not handle post:', error);
@@ -44,4 +30,4 @@ async function postsHandler(evt: any,user_id: number) {
   }
 };
 
-export default postsHandler;
+export default userHandler;

@@ -1,20 +1,19 @@
 import pool from '../databaseConfig/postgresConfig.js'
 import type { UserArr } from '../interface/arrayInterfaces.js';
 
-async function userHandler(evt: any) {
+async function userHandler(user: UserArr[]) {
 
   try {
-    const did = evt.did;
+    const did = user.map((user) => user.id);
 
     const result = await pool.query(`
-      INSERT INTO users (account_id)
-        VALUES ($1)
-        ON CONFLICT (account_id) 
-        DO UPDATE SET account_id = EXCLUDED.account_id
-        RETURNING *`,
-         [did]);
-
-    return result.rows[0].id;
+      INSERT INTO users (id)
+        SELECT UNNEST (
+        $1::TEXT[]
+        )
+        ON CONFLICT (id) 
+        DO NOTHING`,
+      [did]);
   }
   catch (error) {
     console.error('Could not handle user:', error);

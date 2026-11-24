@@ -1,9 +1,9 @@
 export interface PostArr {
   user_id: string,
   post_uri: string;
-  post_text: string,
+  post_text: string | null,
   record_key: string,
-  created_at: Date
+  created_at: Date | null
 }
 
 export interface UserArr {

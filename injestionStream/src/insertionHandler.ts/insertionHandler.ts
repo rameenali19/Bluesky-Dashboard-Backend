@@ -34,24 +34,39 @@ function insertionHandler(event: any[]) {
       postArr.push(postData);
     }
 
-    if (evt.commit.collection === 'app.bsky.feed.like') {
-      const likeData = {
-        user_id: evt.did,
-        target_post_uri: evt.commit.record.subject.uri,
-        record_key: evt.commit.rkey,
-        created_at: new Date(evt.commit.record.createdAt)
+    if (evt.commit.collection === 'app.bsky.feed.like' || evt.commit.collection === 'app.bsky.feed.repost') {
+      const userData = {
+        id: evt.target_post_uri.split('/')[2]
       }
-      likeArr.push(likeData);
-    }
+      userArr.push(userData);
 
-    if (evt.commit.collection === 'app.bsky.feed.repost') {
-      const repostData = {
-        user_id: evt.did,
-        target_post_uri: evt.commit.record.subject.uri,
-        record_key: evt.commit.rkey,
-        created_at: new Date(evt.commit.record.createdAt)
+      const postData = {
+        user_id: evt.target_post_uri.split('/')[2],
+        post_uri: evt.commit.record.subject.uri,
+        post_text: null,
+        record_key: evt.target_post_uri.split('/')[4],
+        created_at: null
       }
-      repostArr.push(repostData);
+      postArr.push(postData);
+
+      if (evt.commit.collection === 'app.bsky.feed.repost') {
+        const repostData = {
+          user_id: evt.did,
+          target_post_uri: evt.commit.record.subject.uri,
+          record_key: evt.commit.rkey,
+          created_at: new Date(evt.commit.record.createdAt)
+        }
+        repostArr.push(repostData);
+      }
+      else if (evt.commit.collection === 'app.bsky.feed.like') {
+        const likeData = {
+          user_id: evt.did,
+          target_post_uri: evt.commit.record.subject.uri,
+          record_key: evt.commit.rkey,
+          created_at: new Date(evt.commit.record.createdAt)
+        }
+        likeArr.push(likeData);
+      }
     }
 
     const historyData = {
@@ -66,8 +81,6 @@ function insertionHandler(event: any[]) {
     }
     historyArr.push(historyData);
   }
-
-
 };
 
 export default insertionHandler;

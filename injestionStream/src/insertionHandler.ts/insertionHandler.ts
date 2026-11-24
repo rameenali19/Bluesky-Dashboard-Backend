@@ -2,7 +2,6 @@ import type { PostArr } from '../interface/arrayInterfaces.js';
 import type { LikeArr } from '../interface/arrayInterfaces.js';
 import type { UserArr } from '../interface/arrayInterfaces.js';
 import type { RepostArr } from '../interface/arrayInterfaces.js';
-import type { CursorArr } from '../interface/arrayInterfaces.js';
 import type { HistoryArr } from '../interface/arrayInterfaces.js';
 import postsHandler from '../postgresHandlers/postsHandler.js';
 import userHandler from '../postgresHandlers/userHandler.js';
@@ -14,7 +13,6 @@ const postArr: PostArr[] = [];
 const likeArr: LikeArr[] = [];
 const repostArr: RepostArr[] = [];
 const userArr: UserArr[] = [];
-const cursorArr: CursorArr[] = [];
 const historyArr: HistoryArr[] = [];
 
 function insertionHandler(event: any[]) {
@@ -67,14 +65,9 @@ function insertionHandler(event: any[]) {
       event_data: JSON.stringify(evt)
     }
     historyArr.push(historyData);
-
-    const cursorData = {
-      last_cursor: evt.seq
-    }
-    cursorArr.push(cursorData);
   }
 
-  
+
 };
 
 export default insertionHandler;

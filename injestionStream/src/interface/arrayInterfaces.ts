@@ -24,10 +24,6 @@ export interface RepostArr {
   created_at: Date
 }
 
-export interface CursorArr {
-  last_cursor: number
-}
-
 export interface HistoryArr {
   user_id: string,
   cursor: number,

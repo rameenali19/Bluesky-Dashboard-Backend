@@ -1,3 +1,4 @@
+import { error } from "node:console";
 import pool from "../databaseConfig/postgresConfig.js";
 import type { DeleteArr } from "../interface/arrayInterfaces.js";
 
@@ -9,10 +10,14 @@ async function deleteEvent(events: DeleteArr[], operation: string) {
   const tableObj: Record<string, string> = {
     like: 'likes',
     post: 'posts',
-    reposts: 'reposts'
+    repost: 'reposts'
   }
 
   const table = tableObj[operation];
+
+  if (!table) {
+    throw new Error("Invalid delete operation");
+  }
 
   try {
 
@@ -22,13 +27,13 @@ async function deleteEvent(events: DeleteArr[], operation: string) {
         deleted = TRUE,
         postgres_updated = NOW()
         FROM UNNEST(
-        $1::TEXT[],F
+        $1::TEXT[],
         $2::TEXT[],
         ) AS d(user_id,record_key)
          WHERE d.user_id = l.user_id 
          AND
-         d.record_key = l.record_key
-        `);
+         d.record_key = l.record_key`,
+      [user_id, record_key]);
   }
 
   catch (error) {

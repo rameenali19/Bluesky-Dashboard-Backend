@@ -2,7 +2,7 @@ import { error } from "node:console";
 import pool from "../databaseConfig/postgresConfig.js";
 import type { DeleteArr } from "../interface/arrayInterfaces.js";
 
-async function deleteEvent(events: DeleteArr[], eventType: string) {
+async function deleteEventHandler(events: DeleteArr[], eventType: string) {
 
   const user_id = events.map((event) => event.user_id);
   const record_key = events.map((event) => event.record_key);
@@ -41,4 +41,4 @@ async function deleteEvent(events: DeleteArr[], eventType: string) {
   }
 }
 
-export default deleteEvent;
+export default deleteEventHandler;

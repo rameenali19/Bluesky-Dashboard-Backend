@@ -8,6 +8,7 @@ import userHandler from '../postgresHandlers/userHandler.js';
 import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
 import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.js';
 import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
+import deleteEventHandler from '../postgresHandlers/deleteEventHandler.js';
 import pRetry from 'p-retry';
 
 async function batchProcessor(event: any[]) {
@@ -140,6 +141,24 @@ async function batchProcessor(event: any[]) {
   });
 
   await pRetry(() => syncStateHandler(event[event.length - 1]), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => deleteEventHandler(deleteLikeArr, 'likes'), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => deleteEventHandler(deleteLikeArr, 'reposts'), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => deleteEventHandler(deleteLikeArr, 'posts'), {
     retries: 5,
     minTimeout: 500,
     factor: 2

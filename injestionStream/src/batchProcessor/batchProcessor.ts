@@ -109,6 +109,43 @@ async function batchProcessor(event: any[]) {
     }
     historyArr.push(historyData);
   }
+
+  await pRetry(() => userHandler(userArr), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => postsHandler(postArr), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => interactionsHandler(likeArr, 'likes'), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => interactionsHandler(repostArr, 'reposts'), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => jetstreamEventhandler(historyArr), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => syncStateHandler(event[event.length - 1]), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
 };
 
 export default batchProcessor;

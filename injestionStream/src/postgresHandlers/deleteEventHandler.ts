@@ -28,7 +28,7 @@ async function deleteEventHandler(events: DeleteArr[], eventType: string) {
         postgres_updated = NOW()
         FROM UNNEST(
         $1::TEXT[],
-        $2::TEXT[],
+        $2::TEXT[]
         ) AS d(user_id,record_key)
          WHERE d.user_id = l.user_id 
          AND

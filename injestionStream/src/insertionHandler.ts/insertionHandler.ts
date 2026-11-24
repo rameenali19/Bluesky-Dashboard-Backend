@@ -77,18 +77,20 @@ function insertionHandler(event: any[]) {
     }
 
     if (evt.commit.operation === 'delete') {
+      const deleteData = {
+        user_id: evt.did,
+        record_key: evt.commit.rkey
+      }
       if (evt.commit.collection === 'app.bsky.feed.post') {
-        const deleteData = {
-
-        }
+        deletePostArr.push(deleteData);
       }
 
       if (evt.commit.collection === 'app.bsky.feed.like') {
-
+        deleteLikeArr.push(deleteData);
       }
 
       if (evt.commit.collection === 'app.bsky.feed.repost') {
-
+        deleteRepostArr.push(deleteData);
       }
     }
 

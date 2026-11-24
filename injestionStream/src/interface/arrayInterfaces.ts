@@ -29,5 +29,6 @@ export interface HistoryArr {
 }
 
 export interface DeleteArr {
-
+  user_id: string,
+  record_key: string
 }

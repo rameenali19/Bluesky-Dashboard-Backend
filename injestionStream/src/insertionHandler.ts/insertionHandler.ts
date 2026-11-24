@@ -19,7 +19,7 @@ const deleteLikeArr: DeleteArr[] = [];
 const deleteRepostArr: DeleteArr[] = [];
 
 
-function insertionHandler(event: any[]) {
+async function insertionHandler(event: any[]) {
 
   for (const evt of event) {
     if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {

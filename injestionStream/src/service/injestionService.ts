@@ -35,17 +35,15 @@ export async function injestionService() {
 
       const batch = eventArr.splice(0, Math.min(500, length));
 
-      try {
-        insertionHandler(batch);
-        time = Date.now();
-      }
-      catch (error) {
-        console.log("Insertion failed: ", error);
-        eventArr.unshift(...batch);
-      }
-      finally {
-        isInserting = false
-      }
+      insertionHandler(batch)
+
+        .catch((error) => {
+          console.log("Insertion failed: ", error);
+        })
+        .finally(() => {
+          isInserting = false
+          time = Date.now();
+        })
     }
 
     sequence = evt.seq;

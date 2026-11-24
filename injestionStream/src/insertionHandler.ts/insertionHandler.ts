@@ -41,16 +41,18 @@ function insertionHandler(event: any[]) {
       }
 
       if (evt.commit.collection === 'app.bsky.feed.like' || evt.commit.collection === 'app.bsky.feed.repost') {
+        const postId = evt.commit.record.subject.uri.split('/')[2];
+        const postRecordKey = evt.commit.record.subject.uri.split('/')[4];
         const userData = {
-          id: evt.commit.record.subject.uri.split('/')[2]
+          id: postId
         }
         userArr.push(userData);
 
         const postData = {
-          user_id: evt.commit.record.subject.uri.split('/')[2],
+          user_id: postId,
           post_uri: evt.commit.record.subject.uri,
           post_text: null,
-          record_key: evt.commit.record.subject.uri.split('/')[4],
+          record_key: postRecordKey,
           created_at: null
         }
         postArr.push(postData);

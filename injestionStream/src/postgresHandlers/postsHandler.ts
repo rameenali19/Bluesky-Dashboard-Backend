@@ -1,7 +1,7 @@
 import pool from '../databaseConfig/postgresConfig.js'
 import type { PostArr } from '../interface/arrayInterfaces.js';
 
-async function userHandler(posts: PostArr[]) {
+async function postsHandler(posts: PostArr[]) {
 
   try {
     const user_id = posts.map((post) => post.user_id);
@@ -30,4 +30,4 @@ async function userHandler(posts: PostArr[]) {
   }
 };
 
-export default userHandler;
+export default postsHandler;

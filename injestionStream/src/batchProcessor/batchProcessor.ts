@@ -19,7 +19,7 @@ const deleteLikeArr: DeleteArr[] = [];
 const deleteRepostArr: DeleteArr[] = [];
 
 
-async function insertionHandler(event: any[]) {
+async function batchProcessor(event: any[]) {
 
   for (const evt of event) {
     if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {
@@ -110,4 +110,4 @@ async function insertionHandler(event: any[]) {
   }
 };
 
-export default insertionHandler;
+export default batchProcessor;

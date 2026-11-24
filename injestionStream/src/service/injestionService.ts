@@ -1,5 +1,5 @@
 import { Jetstream, type CursorStore } from '@bsky/jetstream'
-import insertionHandler from '../insertionHandler.ts/insertionHandler.js';
+import batchProcessor from '../batchProcessor/batchProcessor.js';
 import cursorHandler from '../postgresHandlers/cursorHandler.js';
 
 const eventArr: any[] = [];
@@ -35,7 +35,7 @@ export async function injestionService() {
 
       const batch = eventArr.splice(0, Math.min(500, length));
 
-      insertionHandler(batch)
+      batchProcessor(batch)
 
         .catch((error) => {
           console.log("Insertion failed: ", error);

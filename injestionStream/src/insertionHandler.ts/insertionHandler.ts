@@ -1,7 +1,6 @@
 import type { PostArr } from '../interface/arrayInterfaces.js';
-import type { LikeArr } from '../interface/arrayInterfaces.js';
 import type { UserArr } from '../interface/arrayInterfaces.js';
-import type { RepostArr } from '../interface/arrayInterfaces.js';
+import type { InteractionArr } from '../interface/arrayInterfaces.js';
 import type { HistoryArr } from '../interface/arrayInterfaces.js';
 import postsHandler from '../postgresHandlers/postsHandler.js';
 import userHandler from '../postgresHandlers/userHandler.js';
@@ -10,8 +9,8 @@ import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.j
 import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
 
 const postArr: PostArr[] = [];
-const likeArr: LikeArr[] = [];
-const repostArr: RepostArr[] = [];
+const likeArr: InteractionArr[] = [];
+const repostArr: InteractionArr[] = [];
 const userArr: UserArr[] = [];
 const historyArr: HistoryArr[] = [];
 

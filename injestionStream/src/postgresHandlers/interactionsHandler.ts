@@ -1,7 +1,7 @@
 import pool from '../databaseConfig/postgresConfig.js'
-import type { LikeArr } from '../interface/arrayInterfaces.js';
+import type { InteractionArr } from '../interface/arrayInterfaces.js';
 
-async function interactionHandler(events: LikeArr[], table: string) {
+async function interactionHandler(events: InteractionArr[], table: string) {
 
   try {
     const user_id = events.map((event) => event.user_id);

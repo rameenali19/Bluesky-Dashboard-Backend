@@ -10,14 +10,7 @@ export interface UserArr {
   id: string,
 }
 
-export interface LikeArr {
-  user_id: string,
-  target_post_uri: string,
-  record_key: string,
-  created_at: Date
-}
-
-export interface RepostArr {
+export interface InteractionArr {
   user_id: string,
   target_post_uri: string,
   record_key: string,

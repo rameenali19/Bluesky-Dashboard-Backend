@@ -130,7 +130,7 @@ async function batchProcessor(event: any[]) {
     factor: 2
   });
 
-  await pRetry(() => postsHandler(postArr), {
+  await pRetry(() => postsHandler(uniquePosts), {
     retries: 5,
     minTimeout: 500,
     factor: 2

@@ -117,12 +117,12 @@ async function batchProcessor(event: any[]) {
     }
   }
 
-  for (const post of postArr) {
-    extraPostArr = extraPostArr.filter(
-      p => p.post_uri != post.post_uri
-    )
-  }
-  postArr.push(...extraPostArr);
+  const postMap = new Map<string, PostArr>();
+
+  for (const p of extraPostArr) postMap.set(p.post_uri, p);  
+  for (const p of postArr) postMap.set(p.post_uri, p);     
+
+  const uniquePosts = [...postMap.values()];
 
   await pRetry(() => userHandler(userArr), {
     retries: 5,
@@ -136,13 +136,13 @@ async function batchProcessor(event: any[]) {
     factor: 2
   });
 
-  await pRetry(() => interactionsHandler(likeArr, 'likes'), {
+  await pRetry(() => interactionsHandler(likeArr, 'like'), {
     retries: 5,
     minTimeout: 500,
     factor: 2
   });
 
-  await pRetry(() => interactionsHandler(repostArr, 'reposts'), {
+  await pRetry(() => interactionsHandler(repostArr, 'repost'), {
     retries: 5,
     minTimeout: 500,
     factor: 2
@@ -154,19 +154,19 @@ async function batchProcessor(event: any[]) {
     factor: 2
   });
 
-  await pRetry(() => deleteEventHandler(deleteLikeArr, 'likes'), {
+  await pRetry(() => deleteEventHandler(deleteLikeArr, 'like'), {
     retries: 5,
     minTimeout: 500,
     factor: 2
   });
 
-  await pRetry(() => deleteEventHandler(deleteRepostArr, 'reposts'), {
+  await pRetry(() => deleteEventHandler(deleteRepostArr, 'repost'), {
     retries: 5,
     minTimeout: 500,
     factor: 2
   });
 
-  await pRetry(() => deleteEventHandler(deletePostArr, 'posts'), {
+  await pRetry(() => deleteEventHandler(deletePostArr, 'post'), {
     retries: 5,
     minTimeout: 500,
     factor: 2

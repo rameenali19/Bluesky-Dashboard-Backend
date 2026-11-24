@@ -159,53 +159,69 @@ async function batchProcessor(event: any[]) {
     });
   }
 
-  await pRetry(() => postsHandler(finalPostArr), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (postArr.length !== 0) {
+    await pRetry(() => postsHandler(finalPostArr), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => interactionsHandler(likeArr, 'like'), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (likeArr.length !== 0) {
+    await pRetry(() => interactionsHandler(likeArr, 'like'), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => interactionsHandler(repostArr, 'repost'), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (repostArr.length !== 0) {
+    await pRetry(() => interactionsHandler(repostArr, 'repost'), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => jetstreamEventhandler(historyArr), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (historyArr.length !== 0) {
+    await pRetry(() => jetstreamEventhandler(historyArr), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => deleteEventHandler(deleteLikeArr, 'like'), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (deleteLikeArr.length !== 0) {
+    await pRetry(() => deleteEventHandler(deleteLikeArr, 'like'), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => deleteEventHandler(deleteRepostArr, 'repost'), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (deleteRepostArr.length !== 0) {
+    await pRetry(() => deleteEventHandler(deleteRepostArr, 'repost'), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => deleteEventHandler(deletePostArr, 'post'), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (deletePostArr.length !== 0) {
+    await pRetry(() => deleteEventHandler(deletePostArr, 'post'), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
-  await pRetry(() => syncStateHandler(event[event.length - 1].seq), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  if (event.length !== 0) {
+    await pRetry(() => syncStateHandler(event[event.length - 1].seq), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
 
 };
 

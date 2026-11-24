@@ -10,17 +10,16 @@ import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.j
 import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
 import pRetry from 'p-retry';
 
-const postArr: PostArr[] = [];
-const likeArr: InteractionArr[] = [];
-const repostArr: InteractionArr[] = [];
-const userArr: UserArr[] = [];
-const historyArr: HistoryArr[] = [];
-const deletePostArr: DeleteArr[] = [];
-const deleteLikeArr: DeleteArr[] = [];
-const deleteRepostArr: DeleteArr[] = [];
-
-
 async function batchProcessor(event: any[]) {
+
+  const postArr: PostArr[] = [];
+  const likeArr: InteractionArr[] = [];
+  const repostArr: InteractionArr[] = [];
+  const userArr: UserArr[] = [];
+  const historyArr: HistoryArr[] = [];
+  const deletePostArr: DeleteArr[] = [];
+  const deleteLikeArr: DeleteArr[] = [];
+  const deleteRepostArr: DeleteArr[] = [];
 
   for (const evt of event) {
     if (evt.commit.operation === 'create' || evt.commit.operation === 'update') {

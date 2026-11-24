@@ -11,7 +11,7 @@ async function interactionHandler(events: LikeArr[], table: string) {
 
     const result = await pool.query(`
       INSERT INTO ${table} (user_id, target_post_uri, record_key, created_at)
-        SELECT*
+        SELECT *
         FROM UNNEST (
         $1::TEXT[],
         $2::TEXT[],

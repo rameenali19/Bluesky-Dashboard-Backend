@@ -12,7 +12,7 @@ async function postsHandler(posts: PostArr[]) {
 
     const result = await pool.query(`
       INSERT INTO posts (user_id,post_uri,post_text,record_key,created_at)
-        SELECT*
+        SELECT *
         FROM UNNEST (
         $1::TEXT[],
         $2::TEXT[],

@@ -27,3 +27,7 @@ export interface HistoryArr {
   record_key: string,
   event_data: string
 }
+
+export interface DeleteArr {
+
+}

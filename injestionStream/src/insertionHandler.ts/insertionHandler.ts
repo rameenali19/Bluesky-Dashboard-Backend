@@ -2,6 +2,7 @@ import type { PostArr } from '../interface/arrayInterfaces.js';
 import type { UserArr } from '../interface/arrayInterfaces.js';
 import type { InteractionArr } from '../interface/arrayInterfaces.js';
 import type { HistoryArr } from '../interface/arrayInterfaces.js';
+import type { DeleteArr } from '../interface/arrayInterfaces.js';
 import postsHandler from '../postgresHandlers/postsHandler.js';
 import userHandler from '../postgresHandlers/userHandler.js';
 import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
@@ -13,6 +14,10 @@ const likeArr: InteractionArr[] = [];
 const repostArr: InteractionArr[] = [];
 const userArr: UserArr[] = [];
 const historyArr: HistoryArr[] = [];
+const deletePostArr: DeleteArr[] = [];
+const deleteLikeArr: DeleteArr[] = [];
+const deleteRepostArr: DeleteArr[] = [];
+
 
 function insertionHandler(event: any[]) {
 

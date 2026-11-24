@@ -8,6 +8,7 @@ import userHandler from '../postgresHandlers/userHandler.js';
 import syncStateHandler from '../postgresHandlers/syncStateHandler.js';
 import jetstreamEventhandler from '../postgresHandlers/jetstream_eventsHandler.js';
 import interactionsHandler from '../postgresHandlers/interactionsHandler.js';
+import pRetry from 'p-retry';
 
 const postArr: PostArr[] = [];
 const likeArr: InteractionArr[] = [];

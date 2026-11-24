@@ -39,6 +39,7 @@ export async function injestionService() {
 
         .catch((error) => {
           console.log("Insertion failed: ", error);
+          eventArr.unshift(...batch);
         })
         .finally(() => {
           isInserting = false

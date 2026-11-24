@@ -83,6 +83,12 @@ async function batchProcessor(event: any[]) {
       }
 
       if (evt.commit.operation === 'delete') {
+
+        const userData = {
+          id: evt.did
+        }
+        userArr.push(userData);
+
         const deleteData = {
           user_id: evt.did,
           record_key: evt.commit.rkey
@@ -119,8 +125,8 @@ async function batchProcessor(event: any[]) {
 
   const postMap = new Map<string, PostArr>();
 
-  for (const p of extraPostArr) postMap.set(p.post_uri, p);  
-  for (const p of postArr) postMap.set(p.post_uri, p);     
+  for (const p of extraPostArr) postMap.set(p.post_uri, p);
+  for (const p of postArr) postMap.set(p.post_uri, p);
 
   const uniquePosts = [...postMap.values()];
 

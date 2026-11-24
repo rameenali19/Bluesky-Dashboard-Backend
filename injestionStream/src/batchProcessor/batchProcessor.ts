@@ -146,25 +146,25 @@ async function batchProcessor(event: any[]) {
     factor: 2
   });
 
-  await pRetry(() => syncStateHandler(event[event.length - 1]), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
-
   await pRetry(() => deleteEventHandler(deleteLikeArr, 'likes'), {
     retries: 5,
     minTimeout: 500,
     factor: 2
   });
 
-  await pRetry(() => deleteEventHandler(deleteLikeArr, 'reposts'), {
+  await pRetry(() => deleteEventHandler(deleteRepostArr, 'reposts'), {
     retries: 5,
     minTimeout: 500,
     factor: 2
   });
 
-  await pRetry(() => deleteEventHandler(deleteLikeArr, 'posts'), {
+  await pRetry(() => deleteEventHandler(deletePostArr, 'posts'), {
+    retries: 5,
+    minTimeout: 500,
+    factor: 2
+  });
+
+  await pRetry(() => syncStateHandler(event[event.length - 1].seq), {
     retries: 5,
     minTimeout: 500,
     factor: 2

@@ -21,7 +21,10 @@ async function batchProcessor(event: any[]) {
   const deletePostArr: DeleteArr[] = [];
   const deleteLikeArr: DeleteArr[] = [];
   const deleteRepostArr: DeleteArr[] = [];
+  const uri: any[] = [];
   let extraPostArr: PostArr[] = [];
+  let filteredArr: PostArr[] = [];
+
 
   for (const evt of event) {
     try {
@@ -123,20 +126,40 @@ async function batchProcessor(event: any[]) {
     }
   }
 
-  const postMap = new Map<string, PostArr>();
+  //Inserting all extra post's (from likes and reposts) post_uri inside uri
+  for (const post of extraPostArr) {
+    uri.push(post.post_uri);
+  }
 
-  for (const p of extraPostArr) postMap.set(p.post_uri, p);
-  for (const p of postArr) postMap.set(p.post_uri, p);
+  //removing duplicate uri from the uri
+  let uniqueUri = [...new Set(uri)];
 
-  const uniquePosts = [...postMap.values()];
+  for (const post of extraPostArr) {
+    let postUri: string;
+    for (const uri1 of uniqueUri) {
+      if (post.post_uri === uri1) {
+        filteredArr.push(post);
+        postUri = uri1;
+      }
+    }
+    uniqueUri = uniqueUri.filter((uri2) => uri2 != postUri)
+  }
 
-  await pRetry(() => userHandler(userArr), {
-    retries: 5,
-    minTimeout: 500,
-    factor: 2
-  });
+  for (const post of postArr) {
+    filteredArr = filteredArr.filter((post1) => post1.post_uri !== post.post_uri)
+  }
+  const finalPostArr = [...filteredArr, ...postArr];
 
-  await pRetry(() => postsHandler(uniquePosts), {
+
+  if (userArr.length !== 0) {
+    await pRetry(() => userHandler(userArr), {
+      retries: 5,
+      minTimeout: 500,
+      factor: 2
+    });
+  }
+
+  await pRetry(() => postsHandler(finalPostArr), {
     retries: 5,
     minTimeout: 500,
     factor: 2

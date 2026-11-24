@@ -21,6 +21,7 @@ async function batchProcessor(event: any[]) {
   const deletePostArr: DeleteArr[] = [];
   const deleteLikeArr: DeleteArr[] = [];
   const deleteRepostArr: DeleteArr[] = [];
+  let extraPostArr: PostArr[] = [];
 
   for (const evt of event) {
     try {
@@ -58,7 +59,7 @@ async function batchProcessor(event: any[]) {
             record_key: postRecordKey,
             created_at: null
           }
-          postArr.push(postData);
+          extraPostArr.push(postData);
 
           if (evt.commit.collection === 'app.bsky.feed.repost') {
             const repostData = {
@@ -115,6 +116,13 @@ async function batchProcessor(event: any[]) {
       console.log("Error in data insertion: ", error);
     }
   }
+
+  for (const post of postArr) {
+    extraPostArr = extraPostArr.filter(
+      p => p.post_uri != post.post_uri
+    )
+  }
+  postArr.push(...extraPostArr);
 
   await pRetry(() => userHandler(userArr), {
     retries: 5,

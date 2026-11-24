@@ -159,7 +159,7 @@ async function batchProcessor(event: any[]) {
     });
   }
 
-  if (postArr.length !== 0) {
+  if (finalPostArr.length !== 0) {
     await pRetry(() => postsHandler(finalPostArr), {
       retries: 5,
       minTimeout: 500,

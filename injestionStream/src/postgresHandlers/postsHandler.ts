@@ -21,7 +21,12 @@ async function postsHandler(posts: PostArr[]) {
         $5::TIMESTAMPTZ[]
         )
         ON CONFLICT (user_id, record_key) 
-        DO NOTHING`,
+        DO UPDATE SET
+        post_uri = EXCLUDED.post_uri,
+        post_text = EXCLUDED.post_text,
+        deleted = FALSE,
+        created_at = EXCLUDED.created_at,
+        postgres_updated = NOW()`,
       [user_id, post_uri, post_text, record_key, created_at]);
   }
   catch (error) {

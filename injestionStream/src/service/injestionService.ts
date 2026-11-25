@@ -8,6 +8,7 @@ export async function injestionService() {
 
   const jetstream = new Jetstream('https://jetstream.us-east.bsky.network');
 
+  let isInserting = false;
   let sequence: number | undefined;
   sequence = await cursorHandler();
 
@@ -15,8 +16,29 @@ export async function injestionService() {
     load: async () => sequence,   // number | undefined
     save: async (seq: number) => { sequence = seq },
   }
-  let time = Date.now();
-  let isInserting = false;
+
+  setInterval(() => {
+
+    const length = eventArr.length;
+
+    if (length < 500 && length > 0 && !isInserting) {
+      isInserting = true;
+
+      const batch = eventArr.splice(0, length);
+
+      batchProcessor(batch)
+
+        .catch((error) => {
+          console.log("Insertion failed: ", error);
+          eventArr.unshift(...batch);
+        })
+        .finally(() => {
+          isInserting = false
+        })
+    }
+
+  }, 120000);
+
 
   for await (const evt of jetstream.live({
     collections: ['app.bsky.feed.post', 'app.bsky.feed.like', 'app.bsky.feed.repost'],
@@ -26,11 +48,11 @@ export async function injestionService() {
     if (evt.kind !== 'commit') continue;
 
     eventArr.push(evt);
+    console.log(evt.seq);
 
     const length = eventArr.length;
-    const TwoMinute = Date.now() - time >= 120000;
 
-    if ((length >= 500 || (length > 0 && TwoMinute)) && !isInserting) {
+    if (length >= 500 && !isInserting) {
       isInserting = true;
 
       const batch = eventArr.splice(0, Math.min(500, length));
@@ -43,7 +65,6 @@ export async function injestionService() {
         })
         .finally(() => {
           isInserting = false
-          time = Date.now();
         })
     }
 

@@ -22,10 +22,10 @@ async function postsHandler(posts: PostArr[]) {
         )
         ON CONFLICT (user_id, record_key) 
         DO UPDATE SET
-        COALESCE(post_uri = EXCLUDED.post_uri),
-        COALESCE(post_text = EXCLUDED.post_text),
+        post_uri = EXCLUDED.post_uri,
+        post_text = COALESCE(posts.post_text , EXCLUDED.post_text),
         deleted = FALSE,
-        created_at = EXCLUDED.created_at,
+        created_at = COALESCE(EXCLUDED.created_at , posts.created_at),
         postgres_updated = NOW()`,
       [user_id, post_uri, post_text, record_key, created_at]);
   }

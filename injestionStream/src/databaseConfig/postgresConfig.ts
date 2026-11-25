@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
-import {Pool} from 'pg';
+import { Pool } from 'pg';
 
-dotenv.config({path: '../.env'});
+dotenv.config({ path: '../.env' });
 
 const {
   POSTGRES_DB_HOST,
@@ -23,4 +23,6 @@ const pool = new Pool({
   database: POSTGRES_DB_NAME,
 });
 
-export default pool;
+pool.on('error', (err) => console.error("pg client error: ", err));
+
+export default pool;    

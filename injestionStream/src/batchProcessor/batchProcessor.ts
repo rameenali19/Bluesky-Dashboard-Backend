@@ -25,7 +25,7 @@ async function batchProcessor(event: any[]) {
   let extraPostArr: PostArr[] = [];
   let filteredArr: PostArr[] = [];
 
-
+console.log("BATCH START:", event.length, "First:", event[0]?.seq, "Last:", event[event.length - 1]?.seq);
   for (const evt of event) {
     try {
 
@@ -222,6 +222,7 @@ async function batchProcessor(event: any[]) {
       factor: 2
     });
   }
+  console.log("BATCH SAVED:", event[event.length - 1]?.seq);
 
 };
 

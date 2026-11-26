@@ -48,7 +48,7 @@ export async function injestionService() {
     if (evt.kind !== 'commit') continue;
 
     eventArr.push(evt);
-    console.log(evt.seq);
+    console.log(evt.seq, " ", eventArr.length);
 
     const length = eventArr.length;
 

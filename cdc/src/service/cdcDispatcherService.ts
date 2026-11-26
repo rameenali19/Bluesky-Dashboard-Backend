@@ -13,7 +13,7 @@ async function cdcDispatcherService() {
     try {
 
       postsJob();
-
+      likesJob();
       repostsJob();
 
     }

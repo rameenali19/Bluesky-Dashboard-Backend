@@ -1,15 +1,10 @@
 import likesQueue from "../queues/likesQueue.js";
 
-async function likesJob(likesData: any[] | undefined) {
+async function likesJob() {
 
-  if (likesData === undefined) return;
-
-  const job = await likesQueue.addBulk(
-    likesData.map(like => ({
-      name: 'likesJob',
-      data: like
-    }))
-  )
+  const job = await likesQueue.add('likeSignal', {
+    type: "synclike"
+  })
 }
 
 export default likesJob;

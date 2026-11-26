@@ -14,6 +14,8 @@ async function cdcDispatcherService() {
 
       postsJob();
 
+      repostsJob();
+
     }
 
     catch (error) {

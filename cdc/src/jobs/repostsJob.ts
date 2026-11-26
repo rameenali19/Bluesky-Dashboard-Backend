@@ -1,15 +1,10 @@
 import repostsQueue from "../queues/repostsQueue.js";
 
-async function repostsJob(repostsData: any[] | undefined) {
+async function repostsJob() {
 
-  if (repostsData === undefined) return;
-
-  const job = await repostsQueue.addBulk(
-    repostsData.map(repost => ({
-      name: 'repostsJob',
-      data: repost
-    }))
-  )
+  const job = await repostsQueue.add('repostSignal', {
+    type: "syncReposts"
+  })
 }
 
 export default repostsJob;

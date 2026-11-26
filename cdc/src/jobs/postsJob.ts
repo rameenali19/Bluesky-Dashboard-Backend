@@ -1,15 +1,10 @@
 import postsQueue from "../queues/postsQueue.js";
 
-async function postsJob(postsData: any[] | undefined) {
+async function postsJob() {
 
-  if (postsData === undefined) return;
-
-  const job = await postsQueue.addBulk(
-    postsData.map(post => ({
-      name: 'postsJob',
-      data: post
-    }))
-  )
+  const job = await postsQueue.add('postSignal', {
+    type: "syncPosts"
+  })
 }
 
 export default postsJob;

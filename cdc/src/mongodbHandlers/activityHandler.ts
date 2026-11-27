@@ -8,6 +8,7 @@ interface Activity {
 }
 
 async function activityHandler(data: any[], table: string) {
+  if (!data.length) return;
 
   try {
 

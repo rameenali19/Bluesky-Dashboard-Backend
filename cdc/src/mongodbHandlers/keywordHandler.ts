@@ -10,6 +10,8 @@ interface Keywords {
 
 async function keywordHandler(posts: any[]) {
 
+  if (!posts.length) return;
+
   try {
 
     const keywordMap = new Map<string, {

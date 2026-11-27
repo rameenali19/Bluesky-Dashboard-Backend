@@ -1,6 +1,8 @@
 import pool from "../databaseConfig/postgresConfig.js";
 async function updatingStatus(data: any[]) {
 
+  if (!data.length) return;
+
   try {
 
     const post_uri = data.map((d) => d.post_uri)

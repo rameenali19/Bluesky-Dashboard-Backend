@@ -1,74 +1,52 @@
 import db from "../databaseConfig/mongoConfig.js"
 interface Activity {
-  _id: Date,
+  _id: number,
   posts: number,
   likes: number,
   reposts: number,
   total_activity: number
 }
 
-async function activityHandler(data: any, table: string) {
+async function activityHandler(data: any[], table: string) {
 
   try {
 
-    if (!data.created_at) return
+    const time = new Map<number, number>();
 
-    const minutes = new Date(data.created_at);
-    minutes.setSeconds(0, 0);
+    for (const d of data) {
+      if (!d.created_at) continue;
+      const minutes = new Date(d.created_at);
+      minutes.setSeconds(0, 0);
+      const getTime = minutes.getTime();
 
-    if (table === "posts") {
-      await db.collection<Activity>("activity_per_minute").updateOne(
-        { _id: minutes },
-        {
+      time.set(getTime, (time.get(getTime) || 0) + 1);
+    };
+
+    const totalTime = [...time].map(([minute, count]) => ({ minute, count }));
+
+    const operation = totalTime.map((t) => ({
+      updateOne: {
+        filter: { _id: new Date(t.minute) },
+        update: {
           $inc: {
-            posts: 1,
-            total_activity: 1
-          },
-          $setOnInsert: {
-            likes: 0,
-            reposts: 0
-          }
-        },
-        { upsert: true }
-      )
-    }
-
-    else if (table === "likes") {
-      await db.collection<Activity>("activity_per_minute").updateOne(
-        { _id: minutes },
-        {
-          $inc: {
-            likes: 1,
-            total_activity: 1
+            [table]: t.count,
+            total_activity: t.count
           },
           $setOnInsert: {
             posts: 0,
+            likes: 0,
             reposts: 0
           }
         },
-        { upsert: true }
-      )
-    }
+        upsert: true
+      }
+    }))
 
-    else if (table === "reposts") {
-      await db.collection<Activity>("activity_per_minute").updateOne(
-        { _id: minutes },
-        {
-          $inc: {
-            reposts: 1,
-            total_activity: 1
-          },
-          $setOnInsert: {
-            likes: 0,
-            posts: 0
-          }
-        },
-        { upsert: true }
-      )
-    }
+    await db.collection<Activity>("activity_per_minute").bulkWrite(operation);
   }
   catch (error) {
     console.log("activity handling", error);
+    throw error;
   }
 }
 

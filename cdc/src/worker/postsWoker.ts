@@ -19,9 +19,9 @@ const worker = new Worker("postsQueue", async (job) => {
   await keywordHandlers(posts);
   await updatingStatus(posts);
 
-},
-  {
-    connection: redisConfig,
-    concurrency: 1
-  }
-);
+}, {
+  connection: redisConfig,
+  concurrency: 1
+});
+
+export default worker;

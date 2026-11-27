@@ -24,25 +24,22 @@ async function activityHandler(data: any[], table: string) {
 
     const totalTime = [...time].map(([minute, count]) => ({ minute, count }));
 
-    const operation = totalTime.map((t) => ({
+    const operations = totalTime.map((t) => ({
       updateOne: {
         filter: { _id: new Date(t.minute) },
         update: {
           $inc: {
             [table]: t.count,
             total_activity: t.count
-          },
-          $setOnInsert: {
-            posts: 0,
-            likes: 0,
-            reposts: 0
           }
         },
         upsert: true
       }
     }))
 
-    await db.collection<Activity>("activity_per_minute").bulkWrite(operation);
+    if (operations.length === 0) return;
+
+    await db.collection<Activity>("activity_per_minute").bulkWrite(operations);
   }
   catch (error) {
     console.log("activity handling", error);

@@ -14,10 +14,10 @@ const worker = new Worker("postsQueue", async (job) => {
   if (!posts?.length) return;
 
   await postsHandler(posts);
-  await statsHandler("posts",posts.length);
+  await statsHandler("posts", posts.length);
   await activityHandler(posts, "posts");
   // await keywordHandlers(job.data);
-  // await updatingStatus(job.data.post_uri);
+  await updatingStatus(posts);
 
 },
   {

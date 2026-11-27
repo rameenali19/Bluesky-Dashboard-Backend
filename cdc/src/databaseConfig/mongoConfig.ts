@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import dotenv from 'dotenv'
 
-dotenv.config({path: '../.env'});
+dotenv.config({ path: '../.env' });
 
 const {
   MONGO_DB_HOST,
@@ -15,10 +15,12 @@ if (!(MONGO_DB_HOST && MONGO_DB_PORT && MONGO_DB_PASSWORD && MONGO_DB_USER && MO
   throw new Error('Missing database configuration');
 }
 
-const client = new MongoClient(`mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_NAME}?authSource=admin`);
-
+const client = new MongoClient(
+  `mongodb://${MONGO_DB_USER}:${MONGO_DB_PASSWORD}@${MONGO_DB_HOST}:${MONGO_DB_PORT}/${MONGO_DB_NAME}?authSource=admin&directConnection=true`
+);
 await client.connect();
 
 const db = client.db(MONGO_DB_NAME);
 
+export { client }
 export default db;

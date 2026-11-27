@@ -6,7 +6,9 @@ interface DashboardStats {
   reposts: number
 }
 
-async function statsHandler(table: string) {
+async function statsHandler(table: "posts" | "likes" | "reposts", count: number) {
+
+  if (count === 0) return;
 
   try {
 
@@ -15,7 +17,7 @@ async function statsHandler(table: string) {
         { _id: 1 },
         {
           $inc: {
-            posts: 1
+            posts: count
           }
         },
         { upsert: true }
@@ -27,7 +29,7 @@ async function statsHandler(table: string) {
         { _id: 1 },
         {
           $inc: {
-            likes: 1
+            likes: count
           }
         },
         { upsert: true }
@@ -39,7 +41,7 @@ async function statsHandler(table: string) {
         { _id: 1 },
         {
           $inc: {
-            reposts: 1
+            reposts: count
           }
         },
         { upsert: true }
@@ -48,6 +50,7 @@ async function statsHandler(table: string) {
   }
   catch (error) {
     console.log("handling stats", error);
+    throw error;
   }
 }
 

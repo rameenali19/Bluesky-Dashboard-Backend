@@ -11,14 +11,17 @@ const worker = new Worker("postsQueue", async (job) => {
 
   const posts = await fetchUnsyncedPosts();
 
-  // await postsHandler(job.data);
-  // await statsHandler("posts");
+  if (!posts?.length) return;
+
+  await postsHandler(posts);
+   await statsHandler("posts",posts.length);
   // await activityHandler(job.data, "posts");
   // await keywordHandlers(job.data);
   // await updatingStatus(job.data.post_uri);
 
 },
   {
-    connection: redisConfig
+    connection: redisConfig,
+    concurrency: 1
   }
 );

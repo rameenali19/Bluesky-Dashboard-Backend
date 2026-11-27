@@ -69,6 +69,8 @@ async function keywordHandler(posts: any[]) {
       }
     }))
 
+    if (operations.length === 0) return;
+
     await db.collection<Keywords>("trending_keywords").bulkWrite(operations);
 
   }

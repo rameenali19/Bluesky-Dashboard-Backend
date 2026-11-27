@@ -30,6 +30,7 @@ async function fetchUnsyncedPosts() {
 
   catch (error) {
     console.log("Unsynced Posts fetching failed: ", error);
+    throw error;
   }
 
 }

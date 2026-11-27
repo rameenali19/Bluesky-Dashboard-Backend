@@ -1,6 +1,6 @@
 import db from "../databaseConfig/mongoConfig.js"
 interface Activity {
-  _id: number,
+  _id: Date,
   posts: number,
   likes: number,
   reposts: number,

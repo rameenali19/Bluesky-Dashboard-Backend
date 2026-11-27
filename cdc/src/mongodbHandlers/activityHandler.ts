@@ -1,3 +1,4 @@
+import type { ClientSession } from "mongodb";
 import db from "../databaseConfig/mongoConfig.js"
 interface Activity {
   _id: Date,
@@ -7,7 +8,7 @@ interface Activity {
   total_activity: number
 }
 
-async function activityHandler(data: any[], table: string) {
+async function activityHandler(data: any[], table: "posts" | "likes" | "reposts", session: ClientSession) {
   if (!data.length) return;
 
   try {
@@ -40,7 +41,7 @@ async function activityHandler(data: any[], table: string) {
 
     if (operations.length === 0) return;
 
-    await db.collection<Activity>("activity_per_minute").bulkWrite(operations);
+    await db.collection<Activity>("activity_per_minute").bulkWrite(operations, { session });
   }
   catch (error) {
     console.log("activity handling", error);

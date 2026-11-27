@@ -1,4 +1,6 @@
 import db from "../databaseConfig/mongoConfig.js"
+import { ClientSession } from "mongodb"
+
 interface Posts {
   _id: string,
   like_count: number,
@@ -8,7 +10,7 @@ interface Posts {
   updated_at: Date
 }
 
-async function postsHandler(posts: any[]) {
+async function postsHandler(posts: any[], session: ClientSession) {
 
   if (!posts.length) return;
 
@@ -31,7 +33,7 @@ async function postsHandler(posts: any[]) {
       }
     }))
 
-    await db.collection<Posts>("posts").bulkWrite(operations);
+    await db.collection<Posts>("posts").bulkWrite(operations, { session });
   }
   catch (error) {
     console.log("post insertion in mongdb", error);

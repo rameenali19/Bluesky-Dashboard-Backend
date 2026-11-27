@@ -1,3 +1,4 @@
+import type { ClientSession } from "mongodb";
 import db from "../databaseConfig/mongoConfig.js"
 import { extractKeywords } from "yake-ts";
 
@@ -8,7 +9,7 @@ interface Keywords {
   post_count: number
 }
 
-async function keywordHandler(posts: any[]) {
+async function keywordHandler(posts: any[], session: ClientSession) {
 
   if (!posts.length) return;
 
@@ -73,7 +74,7 @@ async function keywordHandler(posts: any[]) {
 
     if (operations.length === 0) return;
 
-    await db.collection<Keywords>("trending_keywords").bulkWrite(operations);
+    await db.collection<Keywords>("trending_keywords").bulkWrite(operations,{session});
 
   }
   catch (error) {

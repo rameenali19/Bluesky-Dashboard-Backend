@@ -1,4 +1,6 @@
 import db from "../databaseConfig/mongoConfig.js"
+import { ClientSession } from "mongodb"
+
 interface DashboardStats {
   _id: number,
   posts: number,
@@ -6,7 +8,7 @@ interface DashboardStats {
   reposts: number
 }
 
-async function statsHandler(table: "posts" | "likes" | "reposts", count: number) {
+async function statsHandler(table: "posts" | "likes" | "reposts", count: number, session: ClientSession) {
 
   if (count === 0) return;
 
@@ -20,7 +22,7 @@ async function statsHandler(table: "posts" | "likes" | "reposts", count: number)
             posts: count
           }
         },
-        { upsert: true }
+        { upsert: true, session }
       )
     }
 
@@ -32,7 +34,7 @@ async function statsHandler(table: "posts" | "likes" | "reposts", count: number)
             likes: count
           }
         },
-        { upsert: true }
+        { upsert: true, session }
       )
     }
 
@@ -44,7 +46,7 @@ async function statsHandler(table: "posts" | "likes" | "reposts", count: number)
             reposts: count
           }
         },
-        { upsert: true }
+        { upsert: true, session }
       )
     }
   }

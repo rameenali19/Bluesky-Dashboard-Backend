@@ -6,6 +6,7 @@ import activityHandler from "../mongodbHandlers/activityHandler.js";
 import keywordHandlers from "../mongodbHandlers/keywordHandler.js";
 import updatingStatus from "../postgresHandler/updatingStatus.js";
 import fetchUnsyncedPosts from "../unsyncedRowFetching/fetchUnsyncedPosts.js";
+import { client } from "../databaseConfig/mongoConfig.js";
 
 const worker = new Worker("postsQueue", async (job) => {
 
@@ -17,20 +18,36 @@ const worker = new Worker("postsQueue", async (job) => {
 
   if (!posts?.length) return;
 
-  await postsHandler(posts);
-  console.log("Posts collection updated");
+  const session = client.startSession();
 
-  await statsHandler("posts", posts.length);
-  console.log("Stats collection updated");
+  try {
+    await session.withTransaction(async () => {
 
-  await activityHandler(posts, "posts");
-  console.log("Activity collection updated");
+      await postsHandler(posts, session);
+      console.log("Posts collection updated");
 
-  await keywordHandlers(posts);
-  console.log("Keywords collection updated");
+      await statsHandler("posts", posts.length, session);
+      console.log("Stats collection updated");
 
-  await updatingStatus(posts);
-  console.log("PostgreSQL sync status updated");
+      await activityHandler(posts, "posts", session);
+      console.log("Activity collection updated");
+
+      await keywordHandlers(posts, session);
+      console.log("Keywords collection updated");
+    })
+
+    console.log("MongoDB transaction committed");
+
+    await updatingStatus(posts);
+    console.log("PostgreSQL sync status updated");
+  }
+  catch (error) {
+    console.log("CDC processing failed:", error);
+    throw error;
+  }
+  finally {
+    await session.endSession();
+  }
 
 }, {
   connection: redisConfig,

@@ -5,7 +5,7 @@ import repostsJob from '../jobs/repostsJob.js';
 
 async function cdcDispatcherService() {
   console.log("CDC Dispatcher started");
-  // cron.schedule('*/5 * * * * *', async () => {
+  cron.schedule('* * * * *', async () => {
     console.log("Cron executed");
 
     postsJob().catch((error) => {
@@ -15,11 +15,11 @@ async function cdcDispatcherService() {
     // likesJob().catch((error) => {
     //   console.log("likesJob failed: ", error);
     // });
-    
+
     // repostsJob().catch((error) => {
     //   console.log("repostsJob failed: ", error);
     // });
-  // });
+  });
 
- }
+}
 export default cdcDispatcherService;

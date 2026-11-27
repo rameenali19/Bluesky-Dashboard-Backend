@@ -5,7 +5,7 @@ async function updatingStatus(post_uri: String) {
 
     const result = await pool.query(`
     UPDATE posts 
-    SET mongodb_updated = NOW(),
+    SET mongodb_synced_at = NOW(),
     queued_at = NULL
     WHERE post_uri = $1;`, [post_uri])
 

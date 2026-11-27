@@ -7,18 +7,15 @@ async function cdcDispatcherService() {
 
   cron.schedule('* * * * *', async () => {
 
-    try {
-
-      postsJob();
-      likesJob();
-      repostsJob();
-
-    }
-
-    catch (error) {
-      console.log("CDC Dispatcher failed: ", error);
-    }
-
+    postsJob().catch((error) => {
+      console.log("postsJob failed: ", error);
+    });
+    likesJob().catch((error) => {
+      console.log("likesJob failed: ", error);
+    });
+    repostsJob().catch((error) => {
+      console.log("repostsJob failed: ", error);
+    });
   });
 
 }

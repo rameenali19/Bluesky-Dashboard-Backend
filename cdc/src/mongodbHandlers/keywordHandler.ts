@@ -1,48 +1,80 @@
 import db from "../databaseConfig/mongoConfig.js"
 import { extractKeywords } from "yake-ts";
 
-interface keywords {
+interface Keywords {
   keyword: string,
   start: Date,
   end: Date,
   post_count: number
 }
 
-async function keywordHandler(data: any) {
+async function keywordHandler(posts: any[]) {
 
   try {
 
-    if (!data.created_at) return;
+    const keywordMap = new Map<string, {
+      keyword: string,
+      start: Date,
+      end: Date,
+      post_count: number
+    }>();
 
-    const result = extractKeywords(data.text);
-    if (result.length === 0) return;
+    if (posts.length === 0) return;
 
-    const trending = result[0]?.keyword;
-    if (!trending) return;
+    for (const p of posts) {
 
-    const start = new Date(data.created_at);
-    start.setUTCMinutes(0, 0, 0);
-    const end = new Date(start);
-    end.setUTCHours(end.getUTCHours() + 1);
+      if (!p.post_text || !p.created_at) continue;
 
-    await db.collection<keywords>("trending_keywords").updateOne(
-      {
-        keyword: trending,
-        start: start
-      },
-      {
-        $setOnInsert: {
-          end: end
-        },
-        $inc: {
+      const result = extractKeywords(p.post_text);
+      if (result.length === 0) continue;
+
+      const trending = result[0]?.keyword;
+      if (!trending) continue;
+
+      const start = new Date(p.created_at);
+      start.setUTCMinutes(0, 0, 0);
+
+      const end = new Date(start);
+      end.setUTCHours(end.getUTCHours() + 1);
+
+      const key = JSON.stringify([trending, start.getTime()]);
+
+      const exists = keywordMap.get(key);
+      if (exists) {
+        exists.post_count++;
+      }
+      else {
+        keywordMap.set(key, {
+          keyword: trending,
+          start: start,
+          end: end,
           post_count: 1
-        }
-      },
-      { upsert: true }
-    )
+        })
+      }
+    }
+
+    const operations = [...keywordMap.values()].map((value) => ({
+
+      updateOne: {
+        filter: { keyword: value.keyword, start: value.start },
+        update: {
+          $setOnInsert: {
+            end: value.end
+          },
+          $inc: {
+            post_count: value.post_count
+          }
+        },
+        upsert: true
+      }
+    }))
+
+    await db.collection<Keywords>("trending_keywords").bulkWrite(operations);
+
   }
   catch (error) {
     console.log("keywords ", error);
+    throw error;
   }
 }
 

@@ -16,7 +16,7 @@ const worker = new Worker("postsQueue", async (job) => {
   await postsHandler(posts);
   await statsHandler("posts", posts.length);
   await activityHandler(posts, "posts");
-  // await keywordHandlers(job.data);
+  await keywordHandlers(posts);
   await updatingStatus(posts);
 
 },

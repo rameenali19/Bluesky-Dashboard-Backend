@@ -1,13 +1,14 @@
 import pool from "../databaseConfig/postgresConfig.js";
-async function updatingStatus(post_uri: String) {
+async function updatingStatus(post_uri: String[]) {
 
   try {
 
     const result = await pool.query(`
     UPDATE posts 
-    SET mongodb_synced_at = NOW(),
+    SET mongodb_synced_at = queued_at,
     queued_at = NULL
-    WHERE post_uri = $1;`, [post_uri])
+    WHERE post_uri = ANY($1::TEXT[]);
+    `, [post_uri])
 
   }
 

@@ -23,7 +23,7 @@ async function fetchUnsyncedLikes() {
             FROM likes l
             JOIN posts p ON p.post_uri = l.target_post_uri AND p.deleted = false
             )
-            LIMIT 10 )
+            LIMIT 100 )
             RETURNING *`)
 
     return likes.rows;

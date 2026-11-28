@@ -24,7 +24,7 @@ async function fetchUnsyncedReposts() {
             FROM reposts r
             JOIN posts p ON p.post_uri = r.target_post_uri AND p.deleted = false
             )
-            LIMIT 10 )
+            LIMIT 100 )
             RETURNING *
       `)
 

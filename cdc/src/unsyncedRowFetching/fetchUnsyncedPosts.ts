@@ -20,7 +20,7 @@ async function fetchUnsyncedPosts() {
             OR
             queued_at < NOW() - INTERVAL '5 minutes')
             ORDER BY postgres_updated
-            LIMIT 10 )
+            LIMIT 100 )
             RETURNING *
       `)
 

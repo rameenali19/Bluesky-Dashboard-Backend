@@ -5,7 +5,7 @@ import repostsJob from '../jobs/repostsJob.js';
 
 async function cdcDispatcherService() {
   console.log("CDC Dispatcher started");
-  cron.schedule('* * * * *', async () => {
+  cron.schedule('*/2 * * * *', async () => {
     console.log("Cron executed");
 
     postsJob().catch((error) => {

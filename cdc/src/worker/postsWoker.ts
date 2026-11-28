@@ -42,7 +42,7 @@ const worker = new Worker("postsQueue", async (job) => {
     console.log("PostgreSQL sync status updated");
   }
   catch (error) {
-    console.log("CDC processing failed:", error);
+    console.log("Posts worker failed: ", error);
     throw error;
   }
   finally {

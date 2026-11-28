@@ -16,9 +16,9 @@ async function cdcDispatcherService() {
       console.log("likesJob failed: ", error);
     });
 
-    // repostsJob().catch((error) => {
-    //   console.log("repostsJob failed: ", error);
-    // });
+    repostsJob().catch((error) => {
+      console.log("repostsJob failed: ", error);
+    });
   });
 
 }

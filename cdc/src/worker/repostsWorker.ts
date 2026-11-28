@@ -11,3 +11,5 @@ const worker = new Worker("repostsQueue", async (job) => {
     connection: redisConfig
   }
 );
+
+export default worker;

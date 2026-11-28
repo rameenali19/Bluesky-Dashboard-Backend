@@ -36,7 +36,7 @@ async function postsHandler(posts: any[], session: ClientSession) {
     await db.collection<Posts>("posts").bulkWrite(operations, { session });
   }
   catch (error) {
-    console.log("post insertion in mongdb", error);
+    console.log("Cannot handle post insertion in mongdb", error);
     throw error;
   }
 }

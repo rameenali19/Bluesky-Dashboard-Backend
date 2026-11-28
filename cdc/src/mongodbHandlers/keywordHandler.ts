@@ -1,6 +1,7 @@
 import type { ClientSession } from "mongodb";
 import db from "../databaseConfig/mongoConfig.js"
 import { extractKeywords } from "yake-ts";
+import { franc } from "franc";
 
 interface Keywords {
   keyword: string,
@@ -22,8 +23,6 @@ async function keywordHandler(posts: any[], session: ClientSession) {
       post_count: number
     }>();
 
-    if (posts.length === 0) return;
-
     for (const p of posts) {
 
       if (!p.post_text || !p.created_at) continue;
@@ -33,6 +32,8 @@ async function keywordHandler(posts: any[], session: ClientSession) {
 
       const trending = result[0]?.keyword;
       if (!trending) continue;
+
+      if (franc(trending) !== "eng") continue;
 
       const start = new Date(p.created_at);
       start.setUTCMinutes(0, 0, 0);
@@ -74,7 +75,7 @@ async function keywordHandler(posts: any[], session: ClientSession) {
 
     if (operations.length === 0) return;
 
-    await db.collection<Keywords>("trending_keywords").bulkWrite(operations,{session});
+    await db.collection<Keywords>("trending_keywords").bulkWrite(operations, { session });
 
   }
   catch (error) {

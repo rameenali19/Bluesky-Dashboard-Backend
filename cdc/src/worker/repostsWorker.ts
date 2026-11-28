@@ -1,5 +1,5 @@
 import { Worker } from "bullmq"
-import fetchUnsyncedReposts from "../unsyncedRowFetching/fetchUnsyncedLikes.js"
+import fetchUnsyncedReposts from "../unsyncedRowFetching/fetchUnsyncedReposts.js";
 import redisConfig from "../redis/redisConfig.js"
 import { client } from "../databaseConfig/mongoConfig.js";
 import interactionPostsHandler from "../mongodbHandlers/interactionPostsHandler.js";
@@ -13,7 +13,7 @@ const worker = new Worker("repostsQueue", async (job) => {
 
   const reposts = await fetchUnsyncedReposts();
 
-  console.log("Fetched likes:", reposts?.length);
+  console.log("Fetched reposts:", reposts?.length);
 
   if (!reposts?.length) return;
 
@@ -23,12 +23,12 @@ const worker = new Worker("repostsQueue", async (job) => {
     await session.withTransaction(async () => {
 
       await interactionPostsHandler(reposts, session, "repost_count");
-      console.log("post's like count increased");
+      console.log("Post's repost count increased");
 
-      await statsHandler("likes", reposts.length, session);
+      await statsHandler("reposts", reposts.length, session);
       console.log("Stats collection updated");
 
-      await activityHandler(reposts, "likes", session);
+      await activityHandler(reposts, "reposts", session);
       console.log("Activity collection updated");
 
     });
@@ -39,7 +39,7 @@ const worker = new Worker("repostsQueue", async (job) => {
     console.log("PostgreSQL sync status updated");
   }
   catch (error) {
-    console.log("Likes worker failed: ", error)
+    console.log("Repost worker failed: ", error)
     throw error;
   }
   finally {

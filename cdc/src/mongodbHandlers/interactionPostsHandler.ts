@@ -53,7 +53,7 @@ async function interactionPostsHandler(data: any[], session: ClientSession,
     await db.collection<Posts>("posts").bulkWrite(operations, { session });
   }
   catch (error) {
-    console.log("Cannot handle likes increase: ", error);
+    console.log("Cannot handle interaction increase: ", error);
     throw error;
   }
 }

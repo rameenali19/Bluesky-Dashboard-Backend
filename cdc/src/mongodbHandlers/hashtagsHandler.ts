@@ -34,19 +34,31 @@ async function hashtagsHandler(posts: any[], session: ClientSession) {
       const end = new Date(start);
       end.setUTCHours(end.getUTCHours() + 1);
 
-      const key = JSON.stringify([hashtag, start.getTime()]);
-
-      const exists = hashtagMap.get(key);
-      if (exists) {
-        exists.post_count++;
+      const unique: string[] = [];
+      for (const h of hashtag) {
+        if (!unique.includes(h)) {
+          const lowercase = h.toLowerCase();
+          unique.push(lowercase);
+        }
       }
-      else {
-        hashtagMap.set(key, {
-          hashtag: hashtag,
-          start: start,
-          end: end,
-          post_count: 1
-        })
+
+      for (const u of unique) {
+
+        const key = JSON.stringify([u, start.getTime()]);
+
+        const exists = hashtagMap.get(key);
+        if (exists) {
+          exists.post_count++;
+        }
+        else {
+          hashtagMap.set(key, {
+            hashtag: u,
+            start: start,
+            end: end,
+            post_count: 1
+          })
+        }
+
       }
     }
 

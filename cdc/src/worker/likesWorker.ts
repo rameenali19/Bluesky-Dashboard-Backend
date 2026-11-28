@@ -5,7 +5,7 @@ import redisConfig from "../redis/redisConfig.js"
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
 import updatingInteractionsStatus from "../postgresHandler/updatingInteractionsStatus.js";
-import likePostsHandler from "../mongodbHandlers/likePostsHandler.js";
+import interactionPostsHandler from "../mongodbHandlers/interactionPostsHandler.js";
 
 const worker = new Worker("likesQueue", async (job) => {
 
@@ -22,7 +22,7 @@ const worker = new Worker("likesQueue", async (job) => {
   try {
     await session.withTransaction(async () => {
 
-      await likePostsHandler(likes, session);
+      await interactionPostsHandler(likes, session, "likes");
       console.log("post's like count increased");
 
       await statsHandler("likes", likes.length, session);

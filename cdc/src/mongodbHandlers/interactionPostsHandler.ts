@@ -12,9 +12,16 @@ interface Posts {
   updated_at: Date
 }
 
-async function likePostsHandler(likes: any[], session: ClientSession) {
+async function interactionPostsHandler(likes: any[], session: ClientSession, table: "likes" | "reposts") {
 
   if (!likes.length) return;
+
+  if (table === "likes") {
+    const count = "like_count";
+  }
+  else {
+    const count = "repost_count";
+  }
 
   try {
 
@@ -57,4 +64,4 @@ async function likePostsHandler(likes: any[], session: ClientSession) {
   }
 }
 
-export default likePostsHandler;
+export default interactionPostsHandler;

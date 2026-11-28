@@ -2,7 +2,7 @@ import { Worker } from "bullmq"
 import fetchUnsyncedReposts from "../unsyncedRowFetching/fetchUnsyncedLikes.js"
 import redisConfig from "../redis/redisConfig.js"
 import { client } from "../databaseConfig/mongoConfig.js";
-import likePostsHandler from "../mongodbHandlers/likePostsHandler.js";
+import interactionPostsHandler from "../mongodbHandlers/interactionPostsHandler.js";
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
 import updatingInteractionsStatus from "../postgresHandler/updatingInteractionsStatus.js";
@@ -22,7 +22,7 @@ const worker = new Worker("repostsQueue", async (job) => {
   try {
     await session.withTransaction(async () => {
 
-      await likePostsHandler(reposts, session);
+      await interactionPostsHandler(reposts, session, "reposts");
       console.log("post's like count increased");
 
       await statsHandler("likes", reposts.length, session);

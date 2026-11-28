@@ -3,6 +3,15 @@ import { ClientSession } from "mongodb";
 import fetchingPosts from "../postgresHandler/fetchingPosts.js";
 import postsHandler from "./postsHandler.js";
 
+interface Posts {
+  _id: string,
+  like_count: number,
+  repost_count: number,
+  post_text: string,
+  created_at: Date,
+  updated_at: Date
+}
+
 async function likePostsHandler(likes: any[], session: ClientSession) {
 
   if (!likes.length) return;
@@ -18,7 +27,7 @@ async function likePostsHandler(likes: any[], session: ClientSession) {
 
     const posts = await fetchingPosts(uniqueUri);
 
-    const result = await postsHandler(posts, session);
+    await postsHandler(posts, session);
 
     const likeCountMap = new Map<string, number>();
 
@@ -28,6 +37,19 @@ async function likePostsHandler(likes: any[], session: ClientSession) {
 
     const likesCount = [...likeCountMap].map(([postUri, count]) => ({ postUri, count }));
 
+    const operations = likesCount.map((l) => ({
+
+      updateOne: {
+        filter: { _id: l.postUri },
+        update: {
+          $inc: {
+            like_count: l.count
+          }
+        }
+      }
+    }))
+
+    await db.collection<Posts>("posts").bulkWrite(operations, { session });
   }
   catch (error) {
     console.log("Cannot handle likes increase: ", error);

@@ -1,5 +1,5 @@
 import pool from "../databaseConfig/postgresConfig.js";
-async function updatingStatus(data: any[]) {
+async function updatingPostsStatus(data: any[]) {
 
   if (!data.length) return;
 
@@ -22,4 +22,4 @@ async function updatingStatus(data: any[]) {
   }
 };
 
-export default updatingStatus;
+export default updatingPostsStatus;

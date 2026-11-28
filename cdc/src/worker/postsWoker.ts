@@ -4,7 +4,7 @@ import postsHandler from "../mongodbHandlers/postsHandler.js";
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
 import keywordHandlers from "../mongodbHandlers/keywordHandler.js";
-import updatingStatus from "../postgresHandler/updatingStatus.js";
+import updatingPostsStatus from "../postgresHandler/updatingPostsStatus.js";
 import fetchUnsyncedPosts from "../unsyncedRowFetching/fetchUnsyncedPosts.js";
 import { client } from "../databaseConfig/mongoConfig.js";
 
@@ -38,7 +38,7 @@ const worker = new Worker("postsQueue", async (job) => {
 
     console.log("MongoDB transaction committed");
 
-    await updatingStatus(posts);
+    await updatingPostsStatus(posts);
     console.log("PostgreSQL sync status updated");
   }
   catch (error) {

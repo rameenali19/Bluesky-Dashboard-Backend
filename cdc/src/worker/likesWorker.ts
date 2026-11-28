@@ -22,6 +22,9 @@ const worker = new Worker("likesQueue", async (job) => {
   try {
     await session.withTransaction(async () => {
 
+      await likePostsHandler(likes, session);
+      console.log("post's like count increased");
+
       await statsHandler("likes", likes.length, session);
       console.log("Stats collection updated");
 
@@ -44,6 +47,7 @@ const worker = new Worker("likesQueue", async (job) => {
   }
 },
   {
-    connection: redisConfig
+    connection: redisConfig,
+    concurrency: 1
   }
 );

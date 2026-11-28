@@ -51,3 +51,5 @@ const worker = new Worker("likesQueue", async (job) => {
     concurrency: 1
   }
 );
+
+export default worker;

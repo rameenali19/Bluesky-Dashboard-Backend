@@ -1,4 +1,5 @@
 import cdcDispatcherService from "./service/cdcDispatcherService.js";
-import worker from "./worker/postsWoker.js";
+import postsWorker from "./worker/postsWoker.js";
+import likesWorker from "./worker/likesWorker.js";
 
 cdcDispatcherService();

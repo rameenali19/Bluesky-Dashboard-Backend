@@ -12,9 +12,9 @@ async function cdcDispatcherService() {
       console.log("postsJob failed: ", error);
     });
 
-    // likesJob().catch((error) => {
-    //   console.log("likesJob failed: ", error);
-    // });
+    likesJob().catch((error) => {
+      console.log("likesJob failed: ", error);
+    });
 
     // repostsJob().catch((error) => {
     //   console.log("repostsJob failed: ", error);

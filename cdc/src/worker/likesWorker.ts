@@ -5,6 +5,7 @@ import redisConfig from "../redis/redisConfig.js"
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
 import updatingLikesStatus from "../postgresHandler/updatingLikesStatus.js";
+import likePostsHandler from "../mongodbHandlers/likePostsHandler.js";
 
 const worker = new Worker("likesQueue", async (job) => {
 

@@ -5,7 +5,7 @@ import { client } from "../databaseConfig/mongoConfig.js";
 import likePostsHandler from "../mongodbHandlers/likePostsHandler.js";
 import statsHandler from "../mongodbHandlers/statsHandler.js";
 import activityHandler from "../mongodbHandlers/activityHandler.js";
-import updatingLikesStatus from "../postgresHandler/updatingLikesStatus.js";
+import updatingInteractionsStatus from "../postgresHandler/updatingInteractionsStatus.js";
 
 const worker = new Worker("repostsQueue", async (job) => {
 
@@ -35,7 +35,7 @@ const worker = new Worker("repostsQueue", async (job) => {
 
     console.log("MongoDB transaction committed");
 
-    await updatingLikesStatus(reposts);
+    await updatingInteractionsStatus(reposts, "reposts");
     console.log("PostgreSQL sync status updated");
   }
   catch (error) {

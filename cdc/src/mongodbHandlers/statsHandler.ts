@@ -14,41 +14,16 @@ async function statsHandler(table: "posts" | "likes" | "reposts", count: number,
 
   try {
 
-    if (table === "posts") {
-      await db.collection<DashboardStats>("dashboard_stats").updateOne(
-        { _id: 1 },
-        {
-          $inc: {
-            posts: count
-          }
-        },
-        { upsert: true, session }
-      )
-    }
+    await db.collection<DashboardStats>("dashboard_stats").updateOne(
+      { _id: 1 },
+      {
+        $inc: {
+          [table]: count
+        }
+      },
+      { upsert: true, session }
+    )
 
-    else if (table === "likes") {
-      await db.collection<DashboardStats>("dashboard_stats").updateOne(
-        { _id: 1 },
-        {
-          $inc: {
-            likes: count
-          }
-        },
-        { upsert: true, session }
-      )
-    }
-
-    else if (table === "reposts") {
-      await db.collection<DashboardStats>("dashboard_stats").updateOne(
-        { _id: 1 },
-        {
-          $inc: {
-            reposts: count
-          }
-        },
-        { upsert: true, session }
-      )
-    }
   }
   catch (error) {
     console.log("handling stats", error);

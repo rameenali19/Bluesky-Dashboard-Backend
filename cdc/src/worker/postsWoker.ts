@@ -7,6 +7,7 @@ import keywordHandlers from "../mongodbHandlers/keywordHandler.js";
 import updatingPostsStatus from "../postgresHandler/updatingPostsStatus.js";
 import fetchUnsyncedPosts from "../unsyncedRowFetching/fetchUnsyncedPosts.js";
 import { client } from "../databaseConfig/mongoConfig.js";
+import hashtagsHandler from "../mongodbHandlers/hashtagsHandler.js";
 
 const worker = new Worker("postsQueue", async (job) => {
 
@@ -34,6 +35,8 @@ const worker = new Worker("postsQueue", async (job) => {
 
       await keywordHandlers(posts, session);
       console.log("Keywords collection updated");
+
+      await hashtagsHandler(posts, session);
     })
 
     console.log("MongoDB transaction committed");

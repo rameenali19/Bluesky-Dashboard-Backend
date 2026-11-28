@@ -2,6 +2,8 @@ import { Worker } from "bullmq"
 import { client } from "../databaseConfig/mongoConfig.js";
 import fetchUnsyncedLikes from "../unsyncedRowFetching/fetchUnsyncedLikes.js"
 import redisConfig from "../redis/redisConfig.js"
+import statsHandler from "../mongodbHandlers/statsHandler.js";
+import activityHandler from "../mongodbHandlers/activityHandler.js";
 
 const worker = new Worker("likesQueue", async (job) => {
 
@@ -17,6 +19,12 @@ const worker = new Worker("likesQueue", async (job) => {
 
   try {
     await session.withTransaction(async () => {
+
+      await statsHandler("likes", likes.length, session);
+      console.log("Stats collection updated");
+
+      await activityHandler(likes, "likes", session);
+      console.log("Activity collection updated");
 
     })
   }

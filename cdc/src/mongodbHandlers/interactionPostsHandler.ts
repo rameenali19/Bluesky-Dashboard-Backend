@@ -12,23 +12,17 @@ interface Posts {
   updated_at: Date
 }
 
-async function interactionPostsHandler(likes: any[], session: ClientSession, table: "likes" | "reposts") {
+async function interactionPostsHandler(data: any[], session: ClientSession, 
+  table: "like_count" | "repost_count") {
 
-  if (!likes.length) return;
-
-  if (table === "likes") {
-    const count = "like_count";
-  }
-  else {
-    const count = "repost_count";
-  }
+  if (!data.length) return;
 
   try {
 
     let uniqueUri: string[] = [];
-    for (const l of likes) {
-      if (!uniqueUri.includes(l.target_post_uri)) {
-        uniqueUri.push(l.target_post_uri);
+    for (const d of data) {
+      if (!uniqueUri.includes(d.target_post_uri)) {
+        uniqueUri.push(d.target_post_uri);
       }
     }
 
@@ -38,19 +32,19 @@ async function interactionPostsHandler(likes: any[], session: ClientSession, tab
 
     const countMap = new Map<string, number>();
 
-    for (const l of likes) {
-      countMap.set(l.target_post_uri, (countMap.get(l.target_post_uri) || 0) + 1);
+    for (const d of data) {
+      countMap.set(d.target_post_uri, (countMap.get(d.target_post_uri) || 0) + 1);
     }
 
     const totalCount = [...countMap].map(([postUri, count]) => ({ postUri, count }));
 
-    const operations = totalCount.map((l) => ({
+    const operations = totalCount.map((t) => ({
 
       updateOne: {
-        filter: { _id: l.postUri },
+        filter: { _id: t.postUri },
         update: {
           $inc: {
-            like_count: l.count
+            [table]: t.count
           }
         }
       }

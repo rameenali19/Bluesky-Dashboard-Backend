@@ -22,7 +22,7 @@ const worker = new Worker("likesQueue", async (job) => {
   try {
     await session.withTransaction(async () => {
 
-      await interactionPostsHandler(likes, session, "likes");
+      await interactionPostsHandler(likes, session, "like_count");
       console.log("post's like count increased");
 
       await statsHandler("likes", likes.length, session);

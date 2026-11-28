@@ -13,7 +13,7 @@ const worker = new Worker("likesQueue", async (job) => {
 
   const likes = await fetchUnsyncedLikes();
 
-  console.log("Fetched posts:", likes?.length);
+  console.log("Fetched likes:", likes?.length);
 
   if (!likes?.length) return;
 

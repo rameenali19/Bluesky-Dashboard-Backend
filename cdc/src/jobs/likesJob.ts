@@ -1,6 +1,7 @@
 import likesQueue from "../queues/likesQueue.js";
 
 async function likesJob() {
+  console.log("Adding likes job to queue");
 
   const job = await likesQueue.add("likeSignal",
     {
@@ -17,6 +18,7 @@ async function likesJob() {
       removeOnFail: true
     }
   )
+  console.log("Likes job added:", job.id);
 
 }
 

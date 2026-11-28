@@ -1,6 +1,7 @@
 import repostsQueue from "../queues/repostsQueue.js";
 
 async function repostsJob() {
+  console.log("Adding reposts job to queue");
 
   const job = await repostsQueue.add('repostSignal',
     {
@@ -16,6 +17,8 @@ async function repostsJob() {
       removeOnComplete: true,
       removeOnFail: true
     })
+
+    console.log("Reposts job added:", job.id);
 }
 
 export default repostsJob;
